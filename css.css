@@ -1,0 +1,187 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #ccdfdf;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #211828;
+}
+
+.container {
+    width: 100%;
+    max-width: 450px;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(33, 24, 40, 0.15);
+    border: 1px solid #8097B7;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    color: #570210; /* novo destaque principal */
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    text-align: center;
+    margin-bottom: 1.8rem;
+    color: #706F8B;
+    font-size: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #49273F;
+    font-weight: 500;
+}
+
+input[type="file"]
+input[type="email"],
+input[type="text"],
+input[type="number"],
+input[type="tel"],
+input[type="password"],
+input[type="date"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #8097B7;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    color: #211828;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+input[type="file"]:focus,
+input[type="email"]:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus {
+    border-color: #570210;
+    background-color: #ffffff;
+    outline: none;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #570210; /* cor forte e marcante */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-login:hover {
+    background-color: #77080E; /* cor secundária no hover */
+    transform: scale(1.02);
+}
+
+p {
+    text-align: center;
+    
+
+}
+
+/* estilizaçao do inicioADM.php */
+
+.container2 {
+    width: 90%;
+    max-width: 1000px;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #570210;
+    margin-bottom: 30px;
+}
+
+h1 span {
+    font-weight: bold;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.produto-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.produto-table thead {
+    background-color: #77080E;
+    color: #fff;
+}
+
+.produto-table th,
+.produto-table td {
+    padding: 12px 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.produto-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.produto-table img {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.produto-table img:hover {
+    transform: scale(1.1);
+}
+
+.btn-novo-produto {
+    text-align: center;
+}
+
+.btn-novo-produto button {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: #570210;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-novo-produto button:hover {
+    background-color: #77080E; /* cor secundária no hover */
+    transform: scale(1.02);
+}
+
+.no-produtos {
+    text-align: center;
+    color: #777;
+    font-size: 18px;
+}
