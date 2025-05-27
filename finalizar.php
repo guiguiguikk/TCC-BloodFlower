@@ -40,11 +40,32 @@ while ($item = mysqli_fetch_assoc($result_itens)) {
     $total += $subtotal;
 
     $itens[] = [
+        "id_produto" => $produto_id,
         "nome" => $produto["nome"],
         "quantidade" => $quantidade,
         "preco" => $produto["preco"],
         "subtotal" => $subtotal
     ];
+}
+
+//cria um pedido na tabela de pedidos
+$sql_pedido = "INSERT INTO pedidos (id_usuario, total, data_pedido, status) VALUES ($id_usuario, $total, NOW() , 'Pendente')";
+mysqli_query($conn, $sql_pedido);
+
+// Obtém o ID do pedido recém-criado
+$id_pedido = mysqli_insert_id($conn);
+
+// Insere os itens do carrinho na tabela de pedidos_itens
+foreach ($itens as $item) {
+    $produto_id = $item['id_produto'];
+    // Escapa o nome do produto para evitar SQL Injection
+    $nome = mysqli_real_escape_string($conn, $item['nome']);
+    $quantidade = $item['quantidade'];
+    $preco = $item['preco'];
+    $subtotal = $item['subtotal'];
+
+    $sql_pedido_item = "INSERT INTO itens_pedido (id_pedido,id_produto, quantidade, preco, subtotal) VALUES ($id_pedido, $produto_id,  $quantidade, $preco, $subtotal)";
+    mysqli_query($conn, $sql_pedido_item);
 }
 
 // Simula a finalização limpando o carrinho

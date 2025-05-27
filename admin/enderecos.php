@@ -1,17 +1,17 @@
 <?php 
 session_start();
 if (!isset($_SESSION["id"]) || $_SESSION["tipo"] != "admin") {
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit;
 }
-include("conexao.php");
+include("../conexao.php");
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Bloodflower | Usuários</title>
+    <title>Bloodflower | Endereços</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap -->
@@ -77,10 +77,10 @@ include("conexao.php");
                     <a class="nav-link" href="inicioADM.php"><i class="bi bi-box"></i> Produtos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active fw-bold text-danger" href="usuarios.php"><i class="bi bi-people"></i> Usuários</a>
+                    <a class="nav-link " href="usuarios.php"><i class="bi bi-people"></i> Usuários</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="enderecos.php"><i class="bi bi-geo-alt"></i> Endereços</a>
+                    <a class="nav-link active fw-bold text-danger" href="enderecos.php"><i class="bi bi-geo-alt"></i> Endereços</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="marcas.php"><i class="bi bi-tags"></i> Marcas</a>
@@ -91,7 +91,7 @@ include("conexao.php");
             </ul>
 
             <div class="d-flex align-items-center gap-3">
-                <a href="logoff.php" class="btn btn-outline-dark">
+                <a href="../logoff.php" class="btn btn-outline-dark">
                     <i class="bi bi-box-arrow-right"></i> Sair
                 </a>
             </div>
@@ -101,36 +101,37 @@ include("conexao.php");
 
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Gerenciar Usuários</h1>
+        <h1>Gerenciar Endereços</h1>
         <a href="cadUsuario.php" class="btn btn-admin">
-            <i class="bi bi-plus-lg"></i> Novo Usuário
+            <i class="bi bi-plus-lg"></i> Novo endereço
         </a>
     </div>
 
     <?php
-    $sql = "SELECT * FROM usuarios";
+    $sql = "SELECT * FROM enderecos";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
         echo "<div class='table-responsive'>";
         echo "<table class='table table-striped table-hover align-middle'>";
         echo "<thead><tr>";
-        echo "<th>ID</th><th>Nome</th><th>Email</th><th>CPF</th><th>Telefone</th><th>Data de Nascimento</th><th class='text-center' colspan='2'>Ações</th>";
+        echo "<th>ID</th><th>ID Usuario</th><th>CEP</th><th>Rua</th><th>Número</th><th>Cidade</th><th>Estado</th><th class='text-center' colspan='2'>Ações</th>";
         echo "</tr></thead><tbody>";
 
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>";
-            echo "<td>{$row['id_usuario']}</td>";
-            echo "<td>{$row['nome']}</td>";
-            echo "<td>{$row['email']}</td>";
-            echo "<td>{$row['cpf']}</td>";
-            echo "<td>{$row['telefone']}</td>";
-            echo "<td>" . date('d/m/Y', strtotime($row['data_nascimento'])) . "</td>";
+            echo "<td>{$row['id_endereco']}</td>";
+            echo "<td>{$row['usuario_id']}</td>";
+            echo "<td>{$row['cep']}</td>";
+            echo "<td>{$row['rua']}</td>";
+            echo "<td>{$row['numero']}</td>";
+            echo "<td>" . $row['cidade'] . "</td>";
+            echo "<td>" . $row['estado'] . "</td>";
             echo "<td class='text-center'>
-                    <a href='formEditUsuario.php?id_usuario={$row['id_usuario']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
+                    <a href='formEditUsuario.php?id_usuario={$row['id_endereco']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
                   </td>";
             echo "<td class='text-center'>
-                    <a href='excluirUsuario.php?id={$row['id_usuario']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir este usuário?\")'>
+                    <a href='excluirUsuario.php?id={$row['id_endereco']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir este usuário?\")'>
                         <i class='bi bi-trash'></i>
                     </a>
                   </td>";

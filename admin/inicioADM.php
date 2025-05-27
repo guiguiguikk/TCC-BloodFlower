@@ -1,17 +1,17 @@
 <?php 
 session_start();
 if (!isset($_SESSION["id"]) || $_SESSION["tipo"] != "admin") {
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit;
 }
-include("conexao.php");
+include("../conexao.php");
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Bloodflower | Endereços</title>
+    <title>Bloodflower | Produtos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap -->
@@ -65,7 +65,7 @@ include("conexao.php");
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="inicioADM.php">BloodFlower</a>
+        <a class="navbar-brand" href="admin.php">BloodFlower</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAdmin">
             <span class="navbar-toggler-icon"></span>
@@ -74,13 +74,13 @@ include("conexao.php");
         <div class="collapse navbar-collapse" id="navbarNavAdmin">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="inicioADM.php"><i class="bi bi-box"></i> Produtos</a>
+                    <a class="nav-link active fw-bold text-danger" href="inicioADM.php"><i class="bi bi-box"></i> Produtos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="usuarios.php"><i class="bi bi-people"></i> Usuários</a>
+                    <a class="nav-link" href="usuarios.php"><i class="bi bi-people"></i> Usuários</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active fw-bold text-danger" href="enderecos.php"><i class="bi bi-geo-alt"></i> Endereços</a>
+                    <a class="nav-link" href="enderecos.php"><i class="bi bi-geo-alt"></i> Endereços</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="marcas.php"><i class="bi bi-tags"></i> Marcas</a>
@@ -101,37 +101,36 @@ include("conexao.php");
 
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Gerenciar Endereços</h1>
-        <a href="cadUsuario.php" class="btn btn-admin">
-            <i class="bi bi-plus-lg"></i> Novo endereço
+        <h1>Gerenciar Produtos</h1>
+        <a href="formProduto.php" class="btn btn-admin">
+            <i class="bi bi-plus-lg"></i> Novo Produto
         </a>
     </div>
 
     <?php
-    $sql = "SELECT * FROM enderecos";
+    $sql = "SELECT * FROM produtos";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
         echo "<div class='table-responsive'>";
         echo "<table class='table table-striped table-hover align-middle'>";
         echo "<thead><tr>";
-        echo "<th>ID</th><th>ID Usuario</th><th>CEP</th><th>Rua</th><th>Número</th><th>Cidade</th><th>Estado</th><th class='text-center' colspan='2'>Ações</th>";
+        echo "<th>ID</th><th>Nome</th><th>Preço</th><th>Descrição</th><th>Estoque</th><th>Categoria</th><th class='text-center' colspan='2'>Ações</th>";
         echo "</tr></thead><tbody>";
 
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>";
-            echo "<td>{$row['id_endereco']}</td>";
-            echo "<td>{$row['usuario_id']}</td>";
-            echo "<td>{$row['cep']}</td>";
-            echo "<td>{$row['rua']}</td>";
-            echo "<td>{$row['numero']}</td>";
-            echo "<td>" . $row['cidade'] . "</td>";
-            echo "<td>" . $row['estado'] . "</td>";
+            echo "<td>{$row['id']}</td>";
+            echo "<td>{$row['nome']}</td>";
+            echo "<td>R$ " . number_format($row['preco'], 2, ',', '.') . "</td>";
+            echo "<td>{$row['descricao']}</td>";
+            echo "<td>{$row['estoque']}</td>";
+            echo "<td>{$row['categoria_id']}</td>";
             echo "<td class='text-center'>
-                    <a href='formEditUsuario.php?id_usuario={$row['id_endereco']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
+                    <a href='formEditProduto.php?id_produto={$row['id']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
                   </td>";
             echo "<td class='text-center'>
-                    <a href='excluirUsuario.php?id={$row['id_endereco']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir este usuário?\")'>
+                    <a href='excluirProduto.php?id={$row['id']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir este produto?\")'>
                         <i class='bi bi-trash'></i>
                     </a>
                   </td>";
@@ -140,7 +139,7 @@ include("conexao.php");
 
         echo "</tbody></table></div>";
     } else {
-        echo "<p class='text-muted text-center mt-4'>Nenhum usuário cadastrado.</p>";
+        echo "<p class='text-muted text-center mt-4'>Nenhum produto cadastrado.</p>";
     }
     ?>
 </div>
@@ -148,4 +147,6 @@ include("conexao.php");
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+</html>
+
 </html>

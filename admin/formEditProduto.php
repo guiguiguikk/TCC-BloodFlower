@@ -1,5 +1,5 @@
 <?php
-include_once("conexao.php");
+include_once("../conexao.php");
 $id = $_GET['id_produto'];
 
 $sql = "SELECT * FROM produtos WHERE id_produto = '$id'";

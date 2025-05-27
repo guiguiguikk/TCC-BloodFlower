@@ -1,10 +1,10 @@
 <?php
 session_start();
 if (!isset($_SESSION["id"]) || $_SESSION["tipo"] != "admin") {
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit;
 }
-include("conexao.php");
+include("../conexao.php");
 ?>
 
 <!DOCTYPE html>

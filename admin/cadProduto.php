@@ -1,5 +1,5 @@
 <?php
-include("conexao.php");
+include("../conexao.php");
 
 $nome = mysqli_real_escape_string($conn, trim($_POST["nome"]));
 $preco = mysqli_real_escape_string($conn, trim($_POST["preco"]));
@@ -13,7 +13,7 @@ $marca = mysqli_real_escape_string($conn, trim($_POST["marca"]));
  
 $imagem = $_FILES['imagem']['name'];
 $imagem_tmp = $_FILES['imagem']['tmp_name'];
-$imagem_dir = "imagens/" . $imagem;
+$imagem_dir = "../imagens/" . $imagem;
 
 move_uploaded_file($imagem_tmp, $imagem_dir);
 

@@ -1,17 +1,17 @@
 <?php 
 session_start();
 if (!isset($_SESSION["id"]) || $_SESSION["tipo"] != "admin") {
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit;
 }
-include("conexao.php");
+include("../conexao.php");
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Bloodflower | Marcas</title>
+    <title>Bloodflower | Usuários</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap -->
@@ -77,13 +77,13 @@ include("conexao.php");
                     <a class="nav-link" href="inicioADM.php"><i class="bi bi-box"></i> Produtos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="usuarios.php"><i class="bi bi-people"></i> Usuários</a>
+                    <a class="nav-link active fw-bold text-danger" href="usuarios.php"><i class="bi bi-people"></i> Usuários</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="enderecos.php"><i class="bi bi-geo-alt"></i> Endereços</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active fw-bold text-danger" href="marcas.php"><i class="bi bi-tags"></i> Marcas</a>
+                    <a class="nav-link" href="marcas.php"><i class="bi bi-tags"></i> Marcas</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="categorias.php"><i class="bi bi-folder"></i> Categorias</a>
@@ -91,7 +91,7 @@ include("conexao.php");
             </ul>
 
             <div class="d-flex align-items-center gap-3">
-                <a href="logoff.php" class="btn btn-outline-dark">
+                <a href="../logoff.php" class="btn btn-outline-dark">
                     <i class="bi bi-box-arrow-right"></i> Sair
                 </a>
             </div>
@@ -101,32 +101,36 @@ include("conexao.php");
 
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Gerenciar Marcas</h1>
+        <h1>Gerenciar Usuários</h1>
         <a href="cadUsuario.php" class="btn btn-admin">
-            <i class="bi bi-plus-lg"></i> Nova Marca
+            <i class="bi bi-plus-lg"></i> Novo Usuário
         </a>
     </div>
 
     <?php
-    $sql = "SELECT * FROM marca";
+    $sql = "SELECT * FROM usuarios";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
         echo "<div class='table-responsive'>";
         echo "<table class='table table-striped table-hover align-middle'>";
         echo "<thead><tr>";
-        echo "<th>ID</th><th>Marca</th><th class='text-center' colspan='2'>Ações</th>";
+        echo "<th>ID</th><th>Nome</th><th>Email</th><th>CPF</th><th>Telefone</th><th>Data de Nascimento</th><th class='text-center' colspan='2'>Ações</th>";
         echo "</tr></thead><tbody>";
 
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>";
-            echo "<td>{$row['id_marca']}</td>";
+            echo "<td>{$row['id_usuario']}</td>";
             echo "<td>{$row['nome']}</td>";
+            echo "<td>{$row['email']}</td>";
+            echo "<td>{$row['cpf']}</td>";
+            echo "<td>{$row['telefone']}</td>";
+            echo "<td>" . date('d/m/Y', strtotime($row['data_nascimento'])) . "</td>";
             echo "<td class='text-center'>
-                    <a href='formEditMarca.php?id_usuario={$row['id_marca']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
+                    <a href='formEditUsuario.php?id_usuario={$row['id_usuario']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
                   </td>";
             echo "<td class='text-center'>
-                    <a href='excluirMarca.php?id={$row['id_marca']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir este usuário?\")'>
+                    <a href='excluirUsuario.php?id={$row['id_usuario']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir este usuário?\")'>
                         <i class='bi bi-trash'></i>
                     </a>
                   </td>";

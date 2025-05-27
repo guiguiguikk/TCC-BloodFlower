@@ -28,7 +28,7 @@ session_start();
                 exit;
             } elseif ($usuario["tipo_usuario"] == "1") {
                 $_SESSION["tipo"] = "admin";
-                header("Location: inicioADM.php");
+                header("Location: admin/inicioADM.php");
                 exit;
             }
         }
