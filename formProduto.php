@@ -1,4 +1,11 @@
-
+<?php
+session_start();
+if (!isset($_SESSION["id"]) || $_SESSION["tipo"] != "admin") {
+    header("Location: index.php");
+    exit;
+}
+include("conexao.php");
+?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -94,25 +101,46 @@
                 <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*" required>
             </div>
 
+            <?php
+
+            $sql_categoria = "SELECT * FROM categorias";
+            $result_categoria = mysqli_query($conn, $sql_categoria);
+
+            $dados_categoria = mysqli_fetch_assoc($result_categoria);
+
+            ?>
+
+
             <div class="mb-3">
                 <label for="categoria" class="form-label">Categoria:</label>
                 <select class="form-select" id="categoria" name="categoria" required>
                     <option value="" disabled selected>Selecione a categoria</option>
-                    <option value="1">Camiseta</option>
-                    <option value="2">Calça</option>
-                    <option value="3">Boné</option>
-                    <option value="4">Outros</option>
+                    <?php
+                    while ($row_categoria = mysqli_fetch_assoc($result_categoria)) {
+                        echo "<option value='{$row_categoria['id']}'>{$row_categoria['nome']}</option>";
+                    }
+                    ?>
                 </select>
             </div>
+
+            <?php
+            $sql_marca = "SELECT * FROM marca";
+            $result_marca = mysqli_query($conn, $sql_marca);
+
+            $dados_marca = mysqli_fetch_assoc($result_marca);
+
+
+            ?>
 
             <div class="mb-4">
                 <label for="marca" class="form-label">Marca:</label>
                 <select class="form-select" id="marca" name="marca" required>
                     <option value="" disabled selected>Selecione a marca</option>
-                    <option value="1">Nike</option>
-                    <option value="2">Adidas</option>
-                    <option value="3">Puma</option>
-                    <option value="4">Zizou</option>
+                    <?php
+                    while ($row_marca = mysqli_fetch_assoc($result_marca)) {
+                        echo "<option value='{$row_marca['id']}'>{$row_marca['nome']}</option>";
+                    }   
+                    ?>
                 </select>
             </div>
 
