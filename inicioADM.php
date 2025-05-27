@@ -12,7 +12,7 @@ include("conexao.php");
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Bloodfloewr</title>
+    <title>Admin - Bloodflower</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap -->
@@ -21,28 +21,23 @@ include("conexao.php");
 
     <style>
         body {
-            background-color: #f5f5f5;
-            padding: 40px;
+            background-color: #f8f9fa;
         }
 
         .container-admin {
-            max-width: 1000px;
-            margin: auto;
-            background: white;
+            max-width: 1100px;
+            margin: 80px auto;
+            background: #ffffff;
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
         }
 
         h1 {
             color: #dc3545;
-            font-weight: bold;
+            font-weight: 700;
             text-align: center;
             margin-bottom: 30px;
-        }
-
-        table {
-            margin-top: 20px;
         }
 
         .table th {
@@ -83,9 +78,66 @@ include("conexao.php");
             color: #777;
             padding: 40px 0;
         }
+
+        .navbar {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: #dc3545 !important;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="admin.php">BloodFlower</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAdmin">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNavAdmin">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="admin.php"><i class="bi bi-box"></i> Produtos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="usuarios.php"><i class="bi bi-people"></i> Usuários</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="enderecos.php"><i class="bi bi-geo-alt"></i> Endereços</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="marcas.php"><i class="bi bi-tags"></i> Marcas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="categorias.php"><i class="bi bi-folder"></i> Categorias</a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center gap-3">
+                <?php if (!isset($_SESSION['email'])) { ?>
+                    <a href="entrar.php" class="btn btn-outline-dark btn-sm">Entrar</a>
+                <?php } else { ?>
+                    <a href="perfil.php" class="text-dark" title="Meu Perfil">
+                        <i class="bi bi-person-circle fs-4"></i>
+                    </a>
+                <?php } ?>
+                <a href="logoff.php" class="btn btn-outline-dark">
+                    <i class="bi bi-box-arrow-right"></i> Sair
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
 
 <div class="container-admin">
     <h1>Painel de Administração</h1>
@@ -121,7 +173,7 @@ include("conexao.php");
                         </a>
                       </td>";
                 echo "<td class='text-center actions'>
-                        <a href='excluirProduto.php?id=" . $row['id'] . "'>
+                        <a href='excluirProduto.php?id=" . $row['id'] . "' onclick='return confirm(\"Tem certeza que deseja excluir este produto?\")'>
                             <img src='imagens/lixo.png' alt='Excluir'>
                         </a>
                       </td>";
@@ -136,8 +188,8 @@ include("conexao.php");
     </div>
 
     <div class="btn-actions">
-        <a href="cadProduto.html" class="btn btn-admin">Novo Produto</a>
-        <a href="logoff.php" class="btn btn-outline-dark">Sair</a>
+        <a href="cadProduto.html" class="btn btn-admin"><i class="bi bi-plus-lg"></i> Novo Produto</a>
+  
     </div>
 </div>
 
