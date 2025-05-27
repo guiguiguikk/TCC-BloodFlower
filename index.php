@@ -46,7 +46,7 @@ $result = mysqli_query($conn, $sql);
         .navbar-brand {
             font-weight: bold;
             font-size: 1.4rem;
-            color: #dc3545 !important;
+            color: #570210 !important;
             letter-spacing: 1px;
         }
 
@@ -98,7 +98,7 @@ $result = mysqli_query($conn, $sql);
 
         .nav-link.active {
             font-weight: bold;
-            color: #dc3545 !important;
+            color: #570210 !important;
         }
     </style>
 </head>
