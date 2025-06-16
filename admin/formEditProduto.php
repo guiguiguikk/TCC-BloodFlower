@@ -2,7 +2,7 @@
 include_once("../conexao.php");
 $id = $_GET['id_produto'];
 
-$sql = "SELECT * FROM produtos WHERE id_produto = '$id'";
+$sql = "SELECT * FROM produtos WHERE id = '$id'";
 $result = mysqli_query($conn,$sql);
 
 $rows = mysqli_fetch_array($result);
@@ -25,7 +25,7 @@ $rows = mysqli_fetch_array($result);
 <body>
     <h1>Cadastro de Produto</h1>
     <form action="editarProduto.php" method="POST">
-        <input type="hidden" id="nome" name="id_produto" placeholder="Nome" value="<?php echo $rows['id_produto']; ?>" required><br>
+        <input type="hidden" id="nome" name="id_produto" placeholder="Nome" value="<?php echo $rows['id']; ?>" required><br>
         <label for="nome">Nome do Produto:</label><br>
         <input type="text" id="nome" name="nome" placeholder="Nome" value="<?php echo $rows['nome']; ?>" required><br><br>
 
