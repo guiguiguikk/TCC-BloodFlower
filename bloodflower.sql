@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Tempo de geração: 27-Maio-2025 às 10:49
+-- Tempo de geração: 24-Jun-2025 às 11:48
 -- Versão do servidor: 8.0.27
 -- versão do PHP: 7.4.26
 
@@ -33,20 +33,21 @@ CREATE TABLE IF NOT EXISTS `carrinhos` (
   `usuario_id` int DEFAULT NULL,
   PRIMARY KEY (`id_carrinho`),
   KEY `usuario_id` (`usuario_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Extraindo dados da tabela `carrinhos`
 --
 
 INSERT INTO `carrinhos` (`id_carrinho`, `usuario_id`) VALUES
-(1, 3),
+(9, 3),
 (2, 6),
 (3, 7),
 (4, 8),
 (5, 10),
 (6, 11),
-(7, 12);
+(7, 12),
+(10, 13);
 
 -- --------------------------------------------------------
 
@@ -79,14 +80,44 @@ CREATE TABLE IF NOT EXISTS `enderecos` (
   `estado` varchar(2) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id_endereco`),
   KEY `usuario_id` (`usuario_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Extraindo dados da tabela `enderecos`
 --
 
 INSERT INTO `enderecos` (`id_endereco`, `usuario_id`, `cep`, `rua`, `numero`, `bairro`, `cidade`, `estado`) VALUES
-(1, 12, '69375395', 'presidente', '4406', 'centro', 'uruguaiana', 'RS');
+(1, 12, '69375395', 'presidente', '4406', 'centro', 'uruguaiana', 'RS'),
+(2, 13, '97503710', 'albertino pires', '4222', 'cabo luiz quevedo', 'uruguaiana', 'RS');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `favorito`
+--
+
+DROP TABLE IF EXISTS `favorito`;
+CREATE TABLE IF NOT EXISTS `favorito` (
+  `id_favorito` int NOT NULL AUTO_INCREMENT,
+  `usuario_id` int NOT NULL,
+  PRIMARY KEY (`id_favorito`),
+  KEY `fk_usuario` (`usuario_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `item_favorito`
+--
+
+DROP TABLE IF EXISTS `item_favorito`;
+CREATE TABLE IF NOT EXISTS `item_favorito` (
+  `id_item_favorito` int NOT NULL AUTO_INCREMENT,
+  `favorito_id` int NOT NULL,
+  `produto_id` int NOT NULL,
+  PRIMARY KEY (`id_item_favorito`),
+  KEY `fk_produto` (`favorito_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -103,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `itens_carrinho` (
   PRIMARY KEY (`id_item_carrinho`),
   KEY `carrinho_id` (`carrinho_id`),
   KEY `produto_id` (`produto_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Extraindo dados da tabela `itens_carrinho`
@@ -123,15 +154,29 @@ INSERT INTO `itens_carrinho` (`id_item_carrinho`, `carrinho_id`, `produto_id`, `
 
 DROP TABLE IF EXISTS `itens_pedido`;
 CREATE TABLE IF NOT EXISTS `itens_pedido` (
-  `id_item_produto` int NOT NULL AUTO_INCREMENT,
-  `pedido_id` int DEFAULT NULL,
-  `produto_id` int DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_pedido` int NOT NULL,
+  `id_produto` int NOT NULL,
   `quantidade` int NOT NULL,
-  `preco_unitario` decimal(10,2) DEFAULT NULL,
-  PRIMARY KEY (`id_item_produto`),
-  KEY `pedido_id` (`pedido_id`),
-  KEY `produto_id` (`produto_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `preco` decimal(10,2) NOT NULL,
+  `subtotal` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_pedido` (`id_pedido`),
+  KEY `id_produto` (`id_produto`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Extraindo dados da tabela `itens_pedido`
+--
+
+INSERT INTO `itens_pedido` (`id`, `id_pedido`, `id_produto`, `quantidade`, `preco`, `subtotal`) VALUES
+(1, 2, 24, 90, '89.90', '8091.00'),
+(2, 2, 25, 90909, '149.90', '13627259.10'),
+(3, 2, 26, 1, '59.90', '59.90'),
+(4, 2, 27, 1, '199.90', '199.90'),
+(5, 3, 26, 1, '59.90', '59.90'),
+(6, 4, 26, 10, '59.90', '599.00'),
+(7, 4, 27, 7, '199.90', '1399.30');
 
 -- --------------------------------------------------------
 
@@ -165,12 +210,12 @@ INSERT INTO `marca` (`id_marca`, `nome`) VALUES
 DROP TABLE IF EXISTS `pagamentos`;
 CREATE TABLE IF NOT EXISTS `pagamentos` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `usuario_id` int NOT NULL,
-  `valor_total` decimal(10,2) NOT NULL,
-  `metodo_pagamento` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `id_pedido` int NOT NULL,
+  `metodo_pagamento` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` enum('pendente','aprovado','rejeitado') COLLATE utf8mb4_general_ci DEFAULT 'pendente',
   `data_pagamento` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `usuario_id` (`usuario_id`)
+  KEY `id_pedido` (`id_pedido`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -181,16 +226,24 @@ CREATE TABLE IF NOT EXISTS `pagamentos` (
 
 DROP TABLE IF EXISTS `pedidos`;
 CREATE TABLE IF NOT EXISTS `pedidos` (
-  `id_pedido` int NOT NULL AUTO_INCREMENT,
-  `usuario_id` int DEFAULT NULL,
-  `endereco_entrega_id` int DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_usuario` int NOT NULL,
   `data_pedido` datetime DEFAULT CURRENT_TIMESTAMP,
-  `status` varchar(50) COLLATE utf8mb4_general_ci DEFAULT 'pendente',
-  `total` decimal(10,2) DEFAULT NULL,
-  PRIMARY KEY (`id_pedido`),
-  KEY `usuario_id` (`usuario_id`),
-  KEY `endereco_entrega_id` (`endereco_entrega_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `status` enum('pendente','pago','cancelado') COLLATE utf8mb4_general_ci DEFAULT 'pendente',
+  `total` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id_usuario` (`id_usuario`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Extraindo dados da tabela `pedidos`
+--
+
+INSERT INTO `pedidos` (`id`, `id_usuario`, `data_pedido`, `status`, `total`) VALUES
+(1, 3, '2025-05-27 16:43:32', 'pendente', '89.90'),
+(2, 3, '2025-05-27 16:47:03', 'pendente', '13635609.90'),
+(3, 13, '2025-06-18 13:42:00', 'pendente', '59.90'),
+(4, 3, '2025-06-22 22:25:01', 'pendente', '1998.30');
 
 -- --------------------------------------------------------
 
@@ -243,7 +296,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   PRIMARY KEY (`id_usuario`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `cpf` (`cpf`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Extraindo dados da tabela `usuarios`
@@ -258,7 +311,8 @@ INSERT INTO `usuarios` (`id_usuario`, `nome`, `email`, `senha`, `cpf`, `telefone
 (9, 'Fafas', 'abertolf@gmail.com', '$2y$10$lu5n.IgQ1.NGCrUnszCUue0b1btXEV6Iqr689RJ6PVr8VvCWDxa1S', '123456789787', '1234567891011', '2006-08-06', 0),
 (10, 'guileme', 'pedro@gmail.com', '$2y$10$XaQI7cJaAE6kTEGZ9zLhiOaRQbqmvtrJORTO2VPR3N291mmSPavYi', '54353654', '41352352', '2010-10-10', 0),
 (11, 'guileme', 'jonas@gmail.com', '$2y$10$DSnk4kI5LpNt4V0aP2/L.Ozwjy5F4Xqo7BoHSmFnaMD.Ka2kbqoTG', '5346903525923', '450634506', '2000-09-09', 0),
-(12, 'vic', 'vic@gmail.com', '$2y$10$q1hpL6HPtlIeNFVWqwL16uVG4RTsjNv1LsSB9A3sL8hgrUTBtR2MC', '436984563845', '3595467434', '2011-11-11', 0);
+(12, 'vic', 'vic@gmail.com', '$2y$10$q1hpL6HPtlIeNFVWqwL16uVG4RTsjNv1LsSB9A3sL8hgrUTBtR2MC', '436984563845', '3595467434', '2011-11-11', 0),
+(13, 'Paulo Juarez Nunes Camoretto Neto', 'paulo.2022310836@aluno.iffar.edu.br', '$2y$10$36P9kzlAmXllDBEwWlLlVOgD3OYPrhanLbHCHclEGa53lBidAWu8C', '04566672026', '55991423225', '2007-02-02', 0);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

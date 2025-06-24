@@ -91,7 +91,7 @@ include("../conexao.php");
             </ul>
 
             <div class="d-flex align-items-center gap-3">
-                <a href="logoff.php" class="btn btn-outline-dark">
+                <a href="../logoff.php" class="btn btn-outline-dark">
                     <i class="bi bi-box-arrow-right"></i> Sair
                 </a>
             </div>
