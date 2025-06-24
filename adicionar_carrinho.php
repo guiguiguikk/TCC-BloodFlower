@@ -50,7 +50,7 @@ if (mysqli_num_rows($result) == 0) {
         mysqli_query($conn, $sql);
 
         echo "<script>alert('Produto adicionado ao carrinho!');</script>";
-        echo "<script>window.location.href='index.php';</script>";
+        echo "<script>window.location.href='carrinho.php';</script>";
     } else {
         // Produto já está no carrinho
         echo "<script>alert('Produto já está no carrinho!');</script>";
