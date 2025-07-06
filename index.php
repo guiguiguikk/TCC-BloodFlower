@@ -143,6 +143,9 @@ $result = mysqli_query($conn, $sql);
                 <a href="carrinho.php" class="text-dark" title="Carrinho">
                     <i class="bi bi-cart3 fs-4"></i>
                 </a>
+                <a href="favoritos.php" class="text-dark" title="Favoritos">
+                    <i class="bi bi-heart fs-4"></i>
+                </a>
                 <?php if (isset($_SESSION['email'])) { ?>
                 <a href="logoff.php" class="btn btn-outline-dark btn-sm">Sair</a>
                 <?php } ?>

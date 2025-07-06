@@ -63,14 +63,29 @@ $produto = mysqli_fetch_assoc($result);
 </head>
 <body>
 
-<!-- Navbar simplificada (opcional: copiar do index) -->
-<nav class="navbar navbar-light bg-white shadow-sm">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm">
     <div class="container">
-        <a class="navbar-brand text-danger fw-bold" href="index.php">bloodfloewr</a>
-        <div class="ms-auto d-flex gap-3 align-items-center">
-            <a href="carrinho.php" class="text-dark">
-                <i class="bi bi-cart3 fs-4"></i>
-            </a>
+        <a class="navbar-brand text-danger fw-bold" href="index.php">BloodFlower</a>
+
+            <div class="d-flex align-items-center gap-3">
+                <?php if (!isset($_SESSION['email'])) { ?>
+                    <a href="entrar.php" class="btn btn-outline-dark btn-sm">Entrar</a>
+                <?php } else { ?>
+                    <a href="perfil.php" class="text-dark" title="Meu Perfil">
+                        <i class="bi bi-person-circle fs-4"></i>
+                    </a>
+                <?php } ?>
+                <a href="carrinho.php" class="text-dark" title="Carrinho">
+                    <i class="bi bi-cart3 fs-4"></i>
+                </a>
+                <a href="favoritos.php" class="text-dark" title="Favoritos">
+                    <i class="bi bi-heart fs-4"></i>
+                </a>
+                <?php if (isset($_SESSION['email'])) { ?>
+                <a href="logoff.php" class="btn btn-outline-dark btn-sm">Sair</a>
+                <?php } ?>
+            </div>
         </div>
     </div>
 </nav>
@@ -94,7 +109,7 @@ $produto = mysqli_fetch_assoc($result);
                     </button>
                 </form>
 
-                <form method="POST" action="favoritar.php">
+                <form method="POST" action="add_favorito.php">
                     <input type="hidden" name="produto_id" value="<?php echo $produto['id']; ?>">
                     <button type="submit" class="btn btn-outline-dark btn-custom w-100">
                         <i class="bi bi-heart me-2"></i> Favoritar
