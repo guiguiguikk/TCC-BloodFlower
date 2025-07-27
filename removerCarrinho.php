@@ -7,7 +7,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["tipo"] != "cliente") {
     exit;
 }
 
-$id_produto = intval($_GET['produto_id']);
+$id_produto = ($_GET['produto_id']);
 $id_usuario = $_SESSION['id'];
 
 // Buscar o carrinho do usuário

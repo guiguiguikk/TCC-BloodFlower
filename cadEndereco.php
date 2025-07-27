@@ -6,9 +6,8 @@ $nome = mysqli_real_escape_string($conn, trim($_POST["nome"]));
 $cpf = mysqli_real_escape_string($conn, trim($_POST["cpf"]));
 $telefone = mysqli_real_escape_string($conn, trim($_POST["telefone"]));
 $email = mysqli_real_escape_string($conn, trim($_POST["email"]));
-$email = filter_var($email, FILTER_SANITIZE_EMAIL); // Sanitiza o email
 $password = password_hash($_POST['senha'], PASSWORD_DEFAULT);
-$data_nascimento = mysqli_real_escape_string($conn, trim($_POST["data_nascimento"]));
+$data_nascimento = mysqli_real_escape_string($conn,$_POST["data_nascimento"]);
 
 
 // Verifica se o email já existe

@@ -128,10 +128,10 @@ include("../conexao.php");
             echo "<td>" . $row['cidade'] . "</td>";
             echo "<td>" . $row['estado'] . "</td>";
             echo "<td class='text-center'>
-                    <a href='formEditUsuario.php?id_usuario={$row['id_endereco']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
+                    <a href='formEditEndereco.php?id_endereco={$row['id_endereco']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
                   </td>";
             echo "<td class='text-center'>
-                    <a href='excluirUsuario.php?id={$row['id_endereco']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir este usuário?\")'>
+                    <a href='excluirEndereco.php?id={$row['id_endereco']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir este endereço?\")'>
                         <i class='bi bi-trash'></i>
                     </a>
                   </td>";

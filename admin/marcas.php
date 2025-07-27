@@ -123,10 +123,10 @@ include("../conexao.php");
             echo "<td>{$row['id_marca']}</td>";
             echo "<td>{$row['nome']}</td>";
             echo "<td class='text-center'>
-                    <a href='formEditMarca.php?id_usuario={$row['id_marca']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
+                    <a href='formEditMarca.php?id_marca={$row['id_marca']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
                   </td>";
             echo "<td class='text-center'>
-                    <a href='excluirMarca.php?id={$row['id_marca']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir este usuário?\")'>
+                    <a href='excluirMarca.php?id_marca={$row['id_marca']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir este usuário?\")'>
                         <i class='bi bi-trash'></i>
                     </a>
                   </td>";

@@ -101,7 +101,7 @@ $itens = mysqli_query($conn, $sql_itens);
                     </div>
                 </div>
                 <div class="text-end ms-3">
-                    <a href="removerCarrinho.php?produto_id=<?php echo $produto_id; ?>" class="btn btn-sm btn-outline-danger">Remover</a>
+                    <a href="removerFavorito.php?produto_id=<?php echo $produto_id; ?>" class="btn btn-sm btn-outline-danger">Remover</a>
                 </div>
             </div>
             <?php 

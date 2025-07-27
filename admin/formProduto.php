@@ -5,10 +5,12 @@ if (!isset($_SESSION["id"]) || $_SESSION["tipo"] != "admin") {
     exit;
 }
 include("../conexao.php");
+
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +32,7 @@ include("../conexao.php");
             background: white;
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
 
         .title {
@@ -65,6 +67,7 @@ include("../conexao.php");
         }
     </style>
 </head>
+
 <body>
     <div class="container-produto">
         <form action="cadProduto.php" method="POST" enctype="multipart/form-data">
@@ -102,22 +105,21 @@ include("../conexao.php");
             </div>
 
             <?php
-
             $sql_categoria = "SELECT * FROM categorias";
             $result_categoria = mysqli_query($conn, $sql_categoria);
 
-            $dados_categoria = mysqli_fetch_assoc($result_categoria);
-
+            $categorias = mysqli_fetch_all($result_categoria, MYSQLI_ASSOC);
             ?>
-
 
             <div class="mb-3">
                 <label for="categoria" class="form-label">Categoria:</label>
                 <select class="form-select" id="categoria" name="categoria" required>
                     <option value="" disabled selected>Selecione a categoria</option>
                     <?php
-                    while ($row_categoria = mysqli_fetch_assoc($result_categoria)) {
-                        echo "<option value='{$row_categoria['id']}'>{$row_categoria['nome']}</option>";
+                    foreach ($categorias as $row_categoria) {
+                    ?>
+                        <option value='<?php echo $row_categoria['id_categoria']; ?>'><?php echo $row_categoria['nome']; ?></option>
+                    <?php
                     }
                     ?>
                 </select>
@@ -127,9 +129,7 @@ include("../conexao.php");
             $sql_marca = "SELECT * FROM marca";
             $result_marca = mysqli_query($conn, $sql_marca);
 
-            $dados_marca = mysqli_fetch_assoc($result_marca);
-
-
+            $dados_marca = mysqli_fetch_all($result_marca, MYSQLI_ASSOC);
             ?>
 
             <div class="mb-4">
@@ -137,9 +137,11 @@ include("../conexao.php");
                 <select class="form-select" id="marca" name="marca" required>
                     <option value="" disabled selected>Selecione a marca</option>
                     <?php
-                    while ($row_marca = mysqli_fetch_assoc($result_marca)) {
-                        echo "<option value='{$row_marca['id']}'>{$row_marca['nome']}</option>";
-                    }   
+                    foreach ($dados_marca as $row_marca) {
+                    ?>
+                        <option value='<?php echo $row_marca['id_marca']; ?>'><?php echo $row_marca['nome']; ?></option>
+                    <?php
+                    }
                     ?>
                 </select>
             </div>
@@ -151,4 +153,5 @@ include("../conexao.php");
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
