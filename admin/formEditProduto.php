@@ -69,11 +69,11 @@ $produto = mysqli_fetch_assoc($result);
             </div>
             <div class="mb-3">
                 <label for="preco" class="form-label">Preço:</label>
-                <input type="number" step="0.01" class="form-control" id="preco" name="preco" value="<?php echo $produto['preco']; ?>" required>
+                <input type="text" step="0.01" class="form-control" id="input_valor" name="preco" value="<?php echo $produto['preco']; ?>" onfocus="this.selectionStart = this.selectionEnd = this.value.length;" autofocus="true" required>
             </div>
             <div class="mb-3">
                 <label for="preco_desconto" class="form-label">Preço com Desconto:</label>
-                <input type="number" step="0.01" class="form-control" id="preco_desconto" name="preco_desconto" value="<?php echo $produto['preco_desconto']; ?>" required>
+                <input type="text" step="0.01" class="form-control" id="input_valor" name="preco_desconto" value="<?php echo $produto['preco_desconto']; ?>" onfocus="this.selectionStart = this.selectionEnd = this.value.length;" autofocus="true">
             </div>
             <div class="mb-3">
                 <label for="descricao" class="form-label">Descrição:</label>
@@ -112,6 +112,8 @@ $produto = mysqli_fetch_assoc($result);
             <button type="submit" class="btn-submit">Salvar Alterações</button>
         </form>
     </div>
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

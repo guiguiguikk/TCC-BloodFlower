@@ -10,7 +10,7 @@ if (isset($_SESSION['id'])) {
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Entrar - Bloodfloewr</title>
+    <title>Entrar - BloodFlower</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap -->
@@ -79,7 +79,7 @@ if (isset($_SESSION['id'])) {
 <body>
 
 <div class="login-card">
-    <h2>bloodfloewr</h2>
+    <h2>bloodFlower</h2>
     <form action="login.php" method="POST">
         <div class="mb-3">
             <label for="email" class="form-label">E-mail</label>

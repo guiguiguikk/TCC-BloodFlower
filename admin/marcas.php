@@ -135,7 +135,7 @@ include("../conexao.php");
 
         echo "</tbody></table></div>";
     } else {
-        echo "<p class='text-muted text-center mt-4'>Nenhum usuário cadastrado.</p>";
+        echo "<p class='text-muted text-center mt-4'>Nenhuma marca cadastrada.</p>";
     }
     ?>
 </div>

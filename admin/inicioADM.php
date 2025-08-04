@@ -65,7 +65,7 @@ include("../conexao.php");
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="admin.php">BloodFlower</a>
+        <a class="navbar-brand" href="inicioADM.php">BloodFlower</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAdmin">
             <span class="navbar-toggler-icon"></span>

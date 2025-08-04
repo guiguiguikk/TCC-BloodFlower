@@ -86,12 +86,12 @@ include("../conexao.php");
 
             <div class="mb-3">
                 <label for="preco" class="form-label">Preço:</label>
-                <input type="text" class="form-control" id="preco" name="preco" placeholder="R$ 0,00" required>
+                <input type="text" class="form-control" id="input-valor" name="preco" placeholder="R$ 0,00" onfocus="this.selectionStart = this.selectionEnd = this.value.length;" autofocus="true" required>
             </div>
 
             <div class="mb-3">
                 <label for="preco_desconto" class="form-label">Preço com Desconto:</label>
-                <input type="text" class="form-control" id="preco_desconto" name="preco_desconto" placeholder="R$ 0,00">
+                <input type="text" class="form-control" id="input_valor" name="preco_desconto" placeholder="R$ 0,00" onfocus="this.selectionStart = this.selectionEnd = this.value.length;" autofocus="true">
             </div>
 
             <div class="mb-3">
@@ -152,6 +152,7 @@ include("../conexao.php");
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>

@@ -2,7 +2,7 @@
 
 include("conexao.php");
 session_start();
-    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
+    $email = trim($_POST["email"]);
     $email = mysqli_real_escape_string($conn, $email);
     $senha = $_POST["password"];
  

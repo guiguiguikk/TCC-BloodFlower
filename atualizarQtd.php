@@ -21,7 +21,7 @@ if ($row = mysqli_fetch_assoc($result)) {
     // Atualizar a quantidade
     $sql_update = "UPDATE itens_carrinho SET quantidade = $quantidade WHERE carrinho_id = $id_carrinho AND produto_id = $id_produto";
     if (mysqli_query($conn, $sql_update)) {
-        header("Location: carrinho.php"); // Redireciona de volta ao carrinho
+        header("Location: carrinho.php");
         exit;
     } else {
         echo "Erro ao atualizar o carrinho.";

@@ -154,7 +154,7 @@ $result = mysqli_query($conn, $sql);
     </div>
 </nav>
 
-<!-- CATÁLOGO -->
+<!-- catálogo -->
 <div class="container py-5">
 
     <div class="text-center mb-4">

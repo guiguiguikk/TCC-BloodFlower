@@ -89,6 +89,7 @@ $itens = mysqli_query($conn, $sql_itens);
                     $produto_id = $item['produto_id'];
                     $prod_result = mysqli_query($conn, "SELECT * FROM produtos WHERE id = $produto_id");
                     $produto = mysqli_fetch_assoc($prod_result);
+                    
             ?>
             <div class="card-fav d-flex align-items-center">
                 <img src="imagens/<?php echo $produto['imagem']; ?>" class="cart-img me-4" alt="Imagem do Produto">
@@ -97,7 +98,7 @@ $itens = mysqli_query($conn, $sql_itens);
                     <p class="mb-2 text-muted">Preço: R$ <?php echo number_format($produto['preco'], 2, ',', '.'); ?></p>
                     <div class="d-flex gap-2">
                         <a href="detalhes.php?id=<?php echo $produto_id; ?>" class="btn btn-outline-secondary btn-sm">Ver Produto</a>
-                        <a href="adicionarCarrinho.php?produto_id=<?php echo $produto_id; ?>" class="btn btn-sm btn-outline-success">Adicionar ao Carrinho</a>
+                        <a href="adicionar_carrinho.php?produto_id=<?php echo $produto_id; ?>" class="btn btn-sm btn-outline-success">Adicionar ao Carrinho</a>
                     </div>
                 </div>
                 <div class="text-end ms-3">

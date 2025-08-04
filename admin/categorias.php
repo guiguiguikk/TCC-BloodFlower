@@ -11,7 +11,7 @@ include("../conexao.php");
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Bloodflower | Endereços</title>
+    <title>Bloodflower | Categorias</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap -->
@@ -80,13 +80,13 @@ include("../conexao.php");
                     <a class="nav-link " href="usuarios.php"><i class="bi bi-people"></i> Usuários</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active fw-bold text-danger" href="enderecos.php"><i class="bi bi-geo-alt"></i> Endereços</a>
+                    <a class="nav-link" href="enderecos.php"><i class="bi bi-geo-alt"></i> Endereços</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="marcas.php"><i class="bi bi-tags"></i> Marcas</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="categorias.php"><i class="bi bi-folder"></i> Categorias</a>
+                    <a class="nav-link active fw-bold text-danger" href="categorias.php"><i class="bi bi-folder"></i> Categorias</a>
                 </li>
             </ul>
 
@@ -101,37 +101,32 @@ include("../conexao.php");
 
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Gerenciar Endereços</h1>
+        <h1>Gerenciar Categorias</h1>
         <a href="cadUsuario.php" class="btn btn-admin">
-            <i class="bi bi-plus-lg"></i> Novo endereço
+            <i class="bi bi-plus-lg"></i> Nova Categoria
         </a>
     </div>
 
     <?php
-    $sql = "SELECT * FROM enderecos";
+    $sql = "SELECT * FROM categorias";
     $result = mysqli_query($conn, $sql);
 
     if (mysqli_num_rows($result) > 0) {
         echo "<div class='table-responsive'>";
         echo "<table class='table table-striped table-hover align-middle'>";
         echo "<thead><tr>";
-        echo "<th>ID</th><th>ID Usuario</th><th>CEP</th><th>Rua</th><th>Número</th><th>Cidade</th><th>Estado</th><th class='text-center' colspan='2'>Ações</th>";
+        echo "<th>ID</th><th>Categoria</th><th class='text-center' colspan='2'>Ações</th>";
         echo "</tr></thead><tbody>";
 
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>";
-            echo "<td>{$row['id_endereco']}</td>";
-            echo "<td>{$row['usuario_id']}</td>";
-            echo "<td>{$row['cep']}</td>";
-            echo "<td>{$row['rua']}</td>";
-            echo "<td>{$row['numero']}</td>";
-            echo "<td>" . $row['cidade'] . "</td>";
-            echo "<td>" . $row['estado'] . "</td>";
+            echo "<td>{$row['id_categoria']}</td>";
+            echo "<td>{$row['nome']}</td>";
             echo "<td class='text-center'>
-                    <a href='formEditEndereco.php?id_endereco={$row['id_endereco']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
+                    <a href='formEditCategoria.php?id_categoria={$row['id_categoria']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
                   </td>";
             echo "<td class='text-center'>
-                    <a href='excluirEndereco.php?id={$row['id_endereco']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir este endereço?\")'>
+                    <a href='excluirCategoria.php?id_categoria={$row['id_categoria']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir esta categoria?\")'>
                         <i class='bi bi-trash'></i>
                     </a>
                   </td>";
@@ -140,7 +135,7 @@ include("../conexao.php");
 
         echo "</tbody></table></div>";
     } else {
-        echo "<p class='text-muted text-center mt-4'>Nenhum endereço cadastrado.</p>";
+        echo "<p class='text-muted text-center mt-4'>Nenhuma categoria cadastrada.</p>";
     }
     ?>
 </div>
