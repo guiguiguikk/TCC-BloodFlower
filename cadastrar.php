@@ -1,27 +1,52 @@
 <?php
 session_start();
-include("conexao.php");
+include('conexao.php');
 
-$id_usuario = $_POST["id_usuario"];
-$cep = mysqli_real_escape_string($conn, $_POST["cep"]);
-$rua = mysqli_real_escape_string($conn, $_POST["rua"]);
-$numero = mysqli_real_escape_string($conn, $_POST["numero"]);
-$bairro = mysqli_real_escape_string($conn, $_POST["bairro"]);
-$cidade = mysqli_real_escape_string($conn, $_POST["cidade"]);
-$estado = mysqli_real_escape_string($conn, $_POST["estado"]);
+$nome = mysqli_real_escape_string($conn, trim($_POST["nome"]));
+$cpf = mysqli_real_escape_string($conn, trim($_POST["cpf"]));
+$telefone = mysqli_real_escape_string($conn, trim($_POST["telefone"]));
+$email = mysqli_real_escape_string($conn, trim($_POST["email"]));
+$password = password_hash($_POST['senha'], PASSWORD_DEFAULT);
+$data_nascimento = mysqli_real_escape_string($conn, $_POST["data_nascimento"]);
 
-if( is_numeric($cep) && is_numeric($numero) ){
-    $sql = "INSERT INTO enderecos (cep, rua, numero, bairro, cidade, estado, usuario_id) VALUES ('$cep', '$rua', '$numero', '$bairro', '$cidade', '$estado', '$id_usuario')";
-    $result = mysqli_query($conn, $sql);
-
-    if ($result) {
-        header("Location: carrinho.php");
-        exit();
-    } else {
-        echo "<script>alert('Erro ao cadastrar endereço.');</script>";
-        echo "<script>window.location.href='cadastrarEndereco.php';</script>";
-    }
-} else {
-    echo "<script>alert('CEP e número devem ser numéricos.');</script>";
-    echo "<script>window.location.href='cadEndereco.php';</script>";
+// Verifica se o email já existe
+$sql_check_email = "SELECT * FROM usuarios WHERE email = '$email'";
+$result_check_email = mysqli_query($conn, $sql_check_email);
+if (mysqli_num_rows($result_check_email) > 0) {
+    $_SESSION['erro_cadastro'] = "E-mail já cadastrado!";
+    header("Location: cadastro.php");
+    exit();
 }
+
+// Verifica se o CPF já existe
+$sql_check_cpf = "SELECT * FROM usuarios WHERE cpf = '$cpf'";
+$result_check_cpf = mysqli_query($conn, $sql_check_cpf);
+if (mysqli_num_rows($result_check_cpf) > 0) {
+    $_SESSION['erro_cadastro'] = "CPF já cadastrado!";
+    header("Location: cadastro.php");
+    exit();
+}
+
+// Cadastra o usuário
+$sql = "INSERT INTO usuarios (nome, cpf, telefone, email, senha, data_nascimento) 
+        VALUES ('$nome', '$cpf', '$telefone', '$email', '$password', '$data_nascimento')";
+
+$result = mysqli_query($conn, $sql);
+$id_usuario = mysqli_insert_id($conn);
+
+if (!$result || !$id_usuario) {
+    $_SESSION['erro_cadastro'] = "Erro ao cadastrar usuário.";
+    header("Location: cadastro.php");
+    exit();
+} else {
+    // Cria o carrinho para o usuário
+    $sql_carrinho = "INSERT INTO carrinhos (usuario_id) VALUES ($id_usuario)";
+    mysqli_query($conn, $sql_carrinho);
+
+    // Cadastro bem-sucedido
+    $_SESSION['cadastro_sucesso'] = "Cadastro realizado com sucesso! Faça login para continuar.";
+    header("Location: entrar.php");
+    exit();
+}
+?>
+

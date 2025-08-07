@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 04, 2025 at 02:07 AM
+-- Generation Time: Aug 06, 2025 at 04:44 PM
 -- Server version: 8.0.27
 -- PHP Version: 7.4.26
 
@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS `avaliacoes` (
   `data_hora` datetime DEFAULT CURRENT_TIMESTAMP,
   `nota` int DEFAULT NULL,
   PRIMARY KEY (`id_avaliacao`),
-  KEY `usuario_id` (`usuario_id`),
-  KEY `produto_id` (`produto_id`)
+  KEY `fk_avaliacoes_produto` (`produto_id`),
+  KEY `fk_avaliacoes_usuario` (`usuario_id`)
 ) ;
 
 -- --------------------------------------------------------
@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS `carrinhos` (
   `id_carrinho` int NOT NULL AUTO_INCREMENT,
   `usuario_id` int DEFAULT NULL,
   PRIMARY KEY (`id_carrinho`),
-  KEY `usuario_id` (`usuario_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `fk_carrinhos_usuario` (`usuario_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `carrinhos`
@@ -60,16 +60,14 @@ CREATE TABLE IF NOT EXISTS `carrinhos` (
 
 INSERT INTO `carrinhos` (`id_carrinho`, `usuario_id`) VALUES
 (9, 3),
-(2, 6),
 (3, 7),
 (4, 8),
 (5, 10),
 (6, 11),
-(7, 12),
 (10, 13),
 (11, 14),
-(12, 15),
-(13, 16);
+(13, 16),
+(14, 17);
 
 -- --------------------------------------------------------
 
@@ -109,6 +107,7 @@ CREATE TABLE IF NOT EXISTS `enderecos` (
   `bairro` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `cidade` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `estado` varchar(2) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `tipo` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id_endereco`),
   KEY `usuario_id` (`usuario_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -117,10 +116,10 @@ CREATE TABLE IF NOT EXISTS `enderecos` (
 -- Dumping data for table `enderecos`
 --
 
-INSERT INTO `enderecos` (`id_endereco`, `usuario_id`, `cep`, `rua`, `numero`, `bairro`, `cidade`, `estado`) VALUES
-(2, 13, '97503710', 'albertino pires', '422', 'cabo', 'uruguaiana', 'RS'),
-(3, 14, '97080400', 'dscbfdc ', '43543', 'tabajarar brites ', 'uruguaiana', 'RJ'),
-(4, 16, '97503740', 'Monteiro lobaato ', '4406', 'tabajarar brites ', 'uruguaiana', 'RS');
+INSERT INTO `enderecos` (`id_endereco`, `usuario_id`, `cep`, `rua`, `numero`, `bairro`, `cidade`, `estado`, `tipo`) VALUES
+(2, 17, '97503710', 'albertino pires', '422', 'cabo', 'uruguaiana', 'RS', ''),
+(3, 14, '97080400', 'dscbfdc ', '43543', 'tabajarar brites ', 'uruguaiana', 'RJ', ''),
+(4, 16, '97503740', 'Monteiro lobaato ', '4406', 'tabajarar brites ', 'uruguaiana', 'RS', '');
 
 -- --------------------------------------------------------
 
@@ -133,8 +132,8 @@ CREATE TABLE IF NOT EXISTS `favorito` (
   `id_favorito` int NOT NULL AUTO_INCREMENT,
   `usuario_id` int NOT NULL,
   PRIMARY KEY (`id_favorito`),
-  KEY `fk_usuario` (`usuario_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `fk_favorito_usuario` (`usuario_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `favorito`
@@ -142,7 +141,8 @@ CREATE TABLE IF NOT EXISTS `favorito` (
 
 INSERT INTO `favorito` (`id_favorito`, `usuario_id`) VALUES
 (1, 3),
-(2, 16);
+(2, 16),
+(3, 17);
 
 -- --------------------------------------------------------
 
@@ -156,8 +156,9 @@ CREATE TABLE IF NOT EXISTS `item_favorito` (
   `favorito_id` int NOT NULL,
   `produto_id` int NOT NULL,
   PRIMARY KEY (`id_item_favorito`),
-  KEY `fk_produto` (`favorito_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `fk_item_favorito_favorito` (`favorito_id`),
+  KEY `fk_item_favorito_produto` (`produto_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `item_favorito`
@@ -165,7 +166,12 @@ CREATE TABLE IF NOT EXISTS `item_favorito` (
 
 INSERT INTO `item_favorito` (`id_item_favorito`, `favorito_id`, `produto_id`) VALUES
 (1, 1, 27),
-(4, 1, 30);
+(4, 1, 30),
+(5, 3, 27),
+(6, 3, 24),
+(7, 3, 32),
+(8, 3, 25),
+(9, 3, 30);
 
 -- --------------------------------------------------------
 
@@ -180,19 +186,20 @@ CREATE TABLE IF NOT EXISTS `itens_carrinho` (
   `produto_id` int DEFAULT NULL,
   `quantidade` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_item_carrinho`),
-  KEY `carrinho_id` (`carrinho_id`),
-  KEY `produto_id` (`produto_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `produto_id` (`produto_id`),
+  KEY `fk_itens_carrinho_carrinho` (`carrinho_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `itens_carrinho`
 --
 
 INSERT INTO `itens_carrinho` (`id_item_carrinho`, `carrinho_id`, `produto_id`, `quantidade`) VALUES
-(3, 2, 1, 1),
 (4, 3, 1, 1),
 (5, 3, 7, 1),
-(6, 4, 6, 1);
+(6, 4, 6, 1),
+(40, 14, 30, 9),
+(41, 14, 27, 10);
 
 -- --------------------------------------------------------
 
@@ -209,9 +216,9 @@ CREATE TABLE IF NOT EXISTS `itens_pedido` (
   `preco` decimal(10,2) NOT NULL,
   `subtotal` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `id_pedido` (`id_pedido`),
-  KEY `id_produto` (`id_produto`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `fk_itens_pedido_pedido` (`id_pedido`),
+  KEY `fk_itens_pedido_produto` (`id_produto`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `itens_pedido`
@@ -220,20 +227,18 @@ CREATE TABLE IF NOT EXISTS `itens_pedido` (
 INSERT INTO `itens_pedido` (`id`, `id_pedido`, `id_produto`, `quantidade`, `preco`, `subtotal`) VALUES
 (1, 2, 24, 90, '89.90', '8091.00'),
 (2, 2, 25, 90909, '149.90', '13627259.10'),
-(3, 2, 26, 1, '59.90', '59.90'),
 (4, 2, 27, 1, '199.90', '199.90'),
-(5, 3, 26, 1, '59.90', '59.90'),
-(6, 4, 26, 10, '59.90', '599.00'),
 (7, 4, 27, 7, '199.90', '1399.30'),
 (8, 5, 27, 1, '199.90', '199.90'),
 (9, 6, 27, 9, '199.90', '1799.10'),
 (10, 7, 27, 1, '199.90', '199.90'),
 (11, 8, 24, 1, '89.90', '89.90'),
-(12, 8, 26, 1, '59.90', '59.90'),
 (13, 8, 27, 1, '199.90', '199.90'),
-(14, 9, 26, 1, '59.90', '59.90'),
 (15, 9, 25, 1, '149.90', '149.90'),
-(16, 10, 25, 60, '149.90', '8994.00');
+(16, 10, 25, 60, '149.90', '8994.00'),
+(17, 11, 30, 1, '10.00', '10.00'),
+(18, 12, 24, 1, '89.90', '89.90'),
+(19, 12, 25, 1, '149.90', '149.90');
 
 -- --------------------------------------------------------
 
@@ -271,7 +276,7 @@ CREATE TABLE IF NOT EXISTS `pagamentos` (
   `status` enum('pendente','aprovado','rejeitado') COLLATE utf8mb4_general_ci DEFAULT 'pendente',
   `data_pagamento` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `id_pedido` (`id_pedido`)
+  KEY `fk_pagamentos_pedido` (`id_pedido`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -288,8 +293,8 @@ CREATE TABLE IF NOT EXISTS `pedidos` (
   `status` enum('pendente','pago','cancelado') COLLATE utf8mb4_general_ci DEFAULT 'pendente',
   `total` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `id_usuario` (`id_usuario`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `fk_pedidos_usuario` (`id_usuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `pedidos`
@@ -305,7 +310,9 @@ INSERT INTO `pedidos` (`id`, `id_usuario`, `data_pedido`, `status`, `total`) VAL
 (7, 3, '2025-07-18 09:21:44', 'pendente', '199.90'),
 (8, 16, '2025-07-29 13:46:42', 'pendente', '349.70'),
 (9, 3, '2025-07-29 17:53:18', 'pendente', '209.80'),
-(10, 3, '2025-08-03 12:47:26', 'pendente', '8994.00');
+(10, 3, '2025-08-03 12:47:26', 'pendente', '8994.00'),
+(11, 17, '2025-08-06 01:09:58', 'pendente', '10.00'),
+(12, 17, '2025-08-06 01:13:08', 'pendente', '239.80');
 
 -- --------------------------------------------------------
 
@@ -325,9 +332,9 @@ CREATE TABLE IF NOT EXISTS `produtos` (
   `marca_id` int DEFAULT NULL,
   `imagem` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `categoria_id` (`categoria_id`),
-  KEY `marca_id` (`marca_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `fk_produtos_categoria` (`categoria_id`),
+  KEY `fk_produtos_marca` (`marca_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `produtos`
@@ -335,9 +342,10 @@ CREATE TABLE IF NOT EXISTS `produtos` (
 
 INSERT INTO `produtos` (`id`, `nome`, `descricao`, `preco`, `preco_desconto`, `estoque`, `categoria_id`, `marca_id`, `imagem`) VALUES
 (24, 'Camiseta Oversized Preta', 'Camiseta unissex em algodão premium com modelagem oversized.', '89.90', '69.90', 50, 1, 4, 'Camiseta-Oversized-Preto.jpeg'),
-(25, 'Calça Cargo Caqui', 'Calça cargo masculina com bolsos utilitários e elástico na barra.', '149.90', '129.90', 30, 2, 1, 'Calça-Cargo-Sarja.jpeg'),
+(25, 'Calça Cargo Caqui', 'Calça cargo masculina com bolsos utilitários e elástico na barra.', '149.90', '129.90', 30, 2, 2, 'Calça-Cargo-Sarja.jpeg'),
 (27, 'Jaqueta Corta Vento Reflective', 'Jaqueta leve com tecido refletivo e zíper frontal, resistente ao vento.', '98.09', '179.90', 20, 1, 3, 'cortavento.jpeg'),
-(30, 'Boina', 'Boina Chapéu Cinza Italiana Masculina', '10.00', '10.00', 10, 3, 3, 'Boina Chapéu Italiana Masculina Estilo Peaky Blinders.jpeg');
+(30, 'Boina', 'Boina Chapéu Cinza Italiana Masculina', '10.00', '10.00', 10, 3, 3, 'Boina Chapéu Italiana Masculina Estilo Peaky Blinders.jpeg'),
+(32, 'camisa', 'camisa branca', '100.00', '0.00', 100, 1, 3, 'camisa.jpeg');
 
 -- --------------------------------------------------------
 
@@ -351,8 +359,8 @@ CREATE TABLE IF NOT EXISTS `produto_tamanhos` (
   `produto_id` int NOT NULL,
   `tamanho_id` int NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `produto_id` (`produto_id`),
-  KEY `tamanho_id` (`tamanho_id`)
+  KEY `fk_produto_tamanhos_produto` (`produto_id`),
+  KEY `fk_produto_tamanhos_tamanho` (`tamanho_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -387,7 +395,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   PRIMARY KEY (`id_usuario`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `cpf` (`cpf`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `usuarios`
@@ -403,17 +411,83 @@ INSERT INTO `usuarios` (`id_usuario`, `nome`, `email`, `senha`, `cpf`, `telefone
 (11, 'guileme', 'jonas@gmail.com', '$2y$10$DSnk4kI5LpNt4V0aP2/L.Ozwjy5F4Xqo7BoHSmFnaMD.Ka2kbqoTG', '5346903525923', '450634506', '2000-09-09', 0),
 (13, 'Paulo ', 'paulo.2022310836@aluno.iffar.edu.br', '$2y$10$36P9kzlAmXllDBEwWlLlVOgD3OYPrhanLbHCHclEGa53lBidAWu8C', '04566672026', '55991423225', '2007-02-02', 0),
 (14, 'dimitri fernandes', 'dimitri.2023317573@aluno.iffar.edu.br', '$2y$10$QF1wAzimNTZvS2nKLzh/nOBYcFcO3ZfWCooub64DLmQoa6DUKt91W', '32342424242424', '2342424242424', '2025-07-25', 0),
-(16, 'camiesta cinza', 'darksity09@gmail.com', '$2y$10$W.b0S4U9ie.NDC0CsZnB0OF8XcuJknJ0ggxjBfzzZqP3i0xBr0K2.', '03713500002', '559998982313', '2025-08-07', 0);
+(16, 'camiesta cinza', 'darksity09@gmail.com', '$2y$10$W.b0S4U9ie.NDC0CsZnB0OF8XcuJknJ0ggxjBfzzZqP3i0xBr0K2.', '03713500002', '559998982313', '2025-08-07', 0),
+(17, 'oguileme', 'guilherme@gmail.com', '$2y$10$OB3uxvWEJHUJ1t745PQekescfAMWe8NGaDsr8bu0lr/6bzYPujF6i', '12345678912', '6969696969', '2001-10-10', 0);
 
 --
 -- Constraints for dumped tables
 --
 
 --
+-- Constraints for table `avaliacoes`
+--
+ALTER TABLE `avaliacoes`
+  ADD CONSTRAINT `fk_avaliacoes_produto` FOREIGN KEY (`produto_id`) REFERENCES `produtos` (`id`),
+  ADD CONSTRAINT `fk_avaliacoes_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id_usuario`);
+
+--
+-- Constraints for table `carrinhos`
+--
+ALTER TABLE `carrinhos`
+  ADD CONSTRAINT `fk_carrinhos_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id_usuario`);
+
+--
 -- Constraints for table `enderecos`
 --
 ALTER TABLE `enderecos`
   ADD CONSTRAINT `enderecos_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id_usuario`);
+
+--
+-- Constraints for table `favorito`
+--
+ALTER TABLE `favorito`
+  ADD CONSTRAINT `fk_favorito_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id_usuario`);
+
+--
+-- Constraints for table `item_favorito`
+--
+ALTER TABLE `item_favorito`
+  ADD CONSTRAINT `fk_item_favorito_favorito` FOREIGN KEY (`favorito_id`) REFERENCES `favorito` (`id_favorito`),
+  ADD CONSTRAINT `fk_item_favorito_produto` FOREIGN KEY (`produto_id`) REFERENCES `produtos` (`id`);
+
+--
+-- Constraints for table `itens_carrinho`
+--
+ALTER TABLE `itens_carrinho`
+  ADD CONSTRAINT `fk_itens_carrinho_carrinho` FOREIGN KEY (`carrinho_id`) REFERENCES `carrinhos` (`id_carrinho`);
+
+--
+-- Constraints for table `itens_pedido`
+--
+ALTER TABLE `itens_pedido`
+  ADD CONSTRAINT `fk_itens_pedido_pedido` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id`),
+  ADD CONSTRAINT `fk_itens_pedido_produto` FOREIGN KEY (`id_produto`) REFERENCES `produtos` (`id`);
+
+--
+-- Constraints for table `pagamentos`
+--
+ALTER TABLE `pagamentos`
+  ADD CONSTRAINT `fk_pagamentos_pedido` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id`);
+
+--
+-- Constraints for table `pedidos`
+--
+ALTER TABLE `pedidos`
+  ADD CONSTRAINT `fk_pedidos_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+
+--
+-- Constraints for table `produtos`
+--
+ALTER TABLE `produtos`
+  ADD CONSTRAINT `fk_produtos_categoria` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id_categoria`),
+  ADD CONSTRAINT `fk_produtos_marca` FOREIGN KEY (`marca_id`) REFERENCES `marca` (`id_marca`);
+
+--
+-- Constraints for table `produto_tamanhos`
+--
+ALTER TABLE `produto_tamanhos`
+  ADD CONSTRAINT `fk_produto_tamanhos_produto` FOREIGN KEY (`produto_id`) REFERENCES `produtos` (`id`),
+  ADD CONSTRAINT `fk_produto_tamanhos_tamanho` FOREIGN KEY (`tamanho_id`) REFERENCES `tamanhos` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -2,15 +2,10 @@
 include("conexao.php");
 session_start();
 
-// Filtro de categoria se existir
-
 $categoriaAtual = isset($_GET['categoria']) ? (int) $_GET['categoria'] : 0;
-// Filtro de busca se existir
 $busca = isset($_GET['busca']) ? mysqli_real_escape_string($conn, $_GET['busca']) : '';
 
-// Monta a query com filtros
 $sql = "SELECT * FROM produtos";
-
 if ($categoriaAtual > 0) {
     $sql .= " WHERE categoria_id = $categoriaAtual";
 } elseif ($busca) {
@@ -25,180 +20,212 @@ $result = mysqli_query($conn, $sql);
     <meta charset="UTF-8">
     <title>BloodFlower</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="imagens/LogoBloodFlower.png" type="image/png">
 
-    <!-- Bootstrap -->
+    <!-- Bootstrap & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Ícones -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
         body {
-            background-color: #f8f9fa;
-            font-family: 'Segoe UI', sans-serif;
+            background-color: #fdfdfd;
+            font-family: 'Rubik', sans-serif;
+            color: #333;
         }
 
+        /* NAVBAR */
         .navbar {
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .navbar-brand img {
+            height: 48px;
+            margin-right: 10px;
         }
 
         .navbar-brand {
             font-weight: bold;
-            font-size: 1.4rem;
-            color: #570210 !important;
-            letter-spacing: 1px;
+            color: #8b0000 !important;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #555 !important;
+            font-weight: 500;
+            margin: 0 5px;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            color: #8b0000 !important;
+        }
+
+        /* BARRA DE BUSCA */
+        .search-bar {
+            max-width: 600px;
+            margin: 40px auto 20px;
         }
 
         .card {
             border: none;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 0 transparent;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease-in-out;
         }
 
         .card:hover {
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            transform: translateY(-4px);
+            transform: translateY(-5px);
         }
 
         .card img {
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-            width: 100%;
-            height: 220px;
+            height: 250px;
             object-fit: contain;
-            background-color: #f1f1f1; /* fundo neutro para imagens menores */
+            background: #f9f9f9;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
             padding: 10px;
         }
 
         .card-body {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 15px;
+            text-align: center;
         }
 
         .card-title {
-            font-size: 1rem;
-            color: #333;
-            min-height: 3rem;
-            margin-bottom: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
 
         .price {
-            font-weight: 600;
+            font-size: 1rem;
             color: #28a745;
+            font-weight: 500;
         }
 
-        .nav-link.active {
-            font-weight: bold;
-            color: #570210 !important;
+        /* FOOTER */
+        footer {
+            background: #f8f8f8;
+            padding: 30px 0;
+            font-size: 0.95rem;
+            margin-top: 60px;
+        }
+
+        footer h5 {
+            color: #8b0000;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #ddd;
+            text-align: center;
+            padding-top: 15px;
+            color: #999;
         }
     </style>
 </head>
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-lg fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="index.php">BloodFlower</a>
-
+        <a class="navbar-brand" href="index.php">
+            <img src="imagens/LogoBloodFlower.png" alt="Logo BloodFlower">
+            BloodFlower
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavCliente">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNavCliente">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link <?= $categoriaAtual == '0' ? 'active' : '' ?>" href="index.php">Todos os Produtos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= $categoriaAtual == '1' ? 'active' : '' ?>" href="index.php?categoria=1">Camisetas</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= $categoriaAtual == '2' ? 'active' : '' ?>" href="index.php?categoria=2">Calças</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= $categoriaAtual == '3' ? 'active' : '' ?>" href="index.php?categoria=3">Moletons</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= $categoriaAtual == '4' ? 'active' : '' ?>" href="index.php?categoria=4">Acessórios</a>
-                </li>
+                <li class="nav-item"><a class="nav-link <?= $categoriaAtual == '0' ? 'active' : '' ?>" href="index.php">Todos</a></li>
+                <li class="nav-item"><a class="nav-link <?= $categoriaAtual == '1' ? 'active' : '' ?>" href="index.php?categoria=1">Camisetas</a></li>
+                <li class="nav-item"><a class="nav-link <?= $categoriaAtual == '2' ? 'active' : '' ?>" href="index.php?categoria=2">Calças</a></li>
+                <li class="nav-item"><a class="nav-link <?= $categoriaAtual == '3' ? 'active' : '' ?>" href="index.php?categoria=3">Moletons</a></li>
+                <li class="nav-item"><a class="nav-link <?= $categoriaAtual == '4' ? 'active' : '' ?>" href="index.php?categoria=4">Acessórios</a></li>
             </ul>
 
             <div class="d-flex align-items-center gap-3">
                 <?php if (!isset($_SESSION['email'])) { ?>
-                    <a href="entrar.php" class="btn btn-outline-dark btn-sm">Entrar</a>
+                    <a href="entrar.php" class="text-dark" title="Entrar"><i class="bi bi-box-arrow-in-right fs-4"></i></a>
                 <?php } else { ?>
-                    <a href="perfil.php" class="text-dark" title="Meu Perfil">
-                        <i class="bi bi-person-circle fs-4"></i>
-                    </a>
+                    <a href="perfil.php" class="text-dark" title="Meu Perfil"><i class="bi bi-person-circle fs-4"></i></a>
                 <?php } ?>
-                <a href="carrinho.php" class="text-dark" title="Carrinho">
-                    <i class="bi bi-cart3 fs-4"></i>
-                </a>
-                <a href="favoritos.php" class="text-dark" title="Favoritos">
-                    <i class="bi bi-heart fs-4"></i>
-                </a>
+                <a href="carrinho.php" class="text-dark" title="Carrinho"><i class="bi bi-cart fs-4"></i></a>
+                <a href="favoritos.php" class="text-dark" title="Favoritos"><i class="bi bi-heart fs-4"></i></a>
                 <?php if (isset($_SESSION['email'])) { ?>
-                <a href="logoff.php" class="btn btn-outline-dark btn-sm">Sair</a>
+                    <a href="logoff.php" class="text-dark" title="Sair"><i class="bi bi-box-arrow-right fs-4"></i></a>
                 <?php } ?>
             </div>
         </div>
     </div>
 </nav>
 
-<!-- catálogo -->
-<div class="container py-5">
+<!-- ESPAÇO EXTRA PELA NAVBAR FIXA -->
+<div style="height: 90px;"></div>
 
-    <div class="text-center mb-4">
-        <h1 class="text-secondary">Bem-vindo ao BloodFlower</h1>
-        <p class="text-muted">Explore nossos produtos e faça seu pedido!</p>
-    </div>
+<!-- BARRA DE BUSCA -->
+<div class="search-bar px-3">
+    <form method="GET" action="index.php" class="input-group">
+        <input type="text" name="busca" class="form-control" placeholder="Pesquisar produtos...">
+        <button class="btn btn-danger" type="submit">Buscar</button>
+    </form>
+</div>
 
-    <div class="text-center mb-5">
-        <form method="GET" action="index.php" class="d-flex justify-content-center">
-            <div class="input-group w-50">
-                <input 
-                    type="text" 
-                    name="busca" 
-                    class="form-control form-control-lg rounded-pill ps-4" 
-                    placeholder="Pesquisar produtos..." 
-                    aria-label="Pesquisar"
-                    style="border-radius: 50px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-                <button class="btn btn-danger rounded-pill ms-2 px-4" type="submit">Buscar</button>
-            </div>
-        </form>
-    </div>
-
+<!-- PRODUTOS -->
+<div class="container my-5">
     <div class="row g-4">
         <?php if (mysqli_num_rows($result) > 0) {
             while ($produto = mysqli_fetch_assoc($result)) { ?>
                 <div class="col-sm-6 col-md-4 col-lg-3">
                     <div class="card h-100">
-                        <a href="detalhes.php?id=<?= $produto['id']; ?>" class="text-decoration-none">
+                        <a href="detalhes.php?id=<?= $produto['id']; ?>" class="text-decoration-none text-dark">
                             <img src="imagens/<?= htmlspecialchars($produto['imagem']); ?>" class="card-img-top" alt="<?= htmlspecialchars($produto['nome']); ?>">
-                            <div class="card-body text-center">
+                            <div class="card-body">
                                 <h5 class="card-title"><?= htmlspecialchars($produto['nome']); ?></h5>
                                 <p class="price">R$ <?= number_format($produto['preco'], 2, ',', '.'); ?></p>
                             </div>
                         </a>
                     </div>
                 </div>
-        <?php } 
+        <?php }
         } else {
             echo "<p class='text-center text-muted'>Nenhum produto encontrado.</p>";
         } ?>
     </div>
 </div>
 
-<!-- Bootstrap JS -->
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <h5>BloodFlower</h5>
+                <p>Vista-se com originalidade e atitude. Roupas alternativas para quem quer se destacar.</p>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h5>Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-muted text-decoration-none">Início</a></li>
+                    <li><a href="#" class="text-muted text-decoration-none">Loja</a></li>
+                    <li><a href="#" class="text-muted text-decoration-none">Contato</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 mb-3">
+                <h5>Contato</h5>
+                <p><i class="bi bi-envelope"></i> contato@bloodflower.com</p>
+                <p><i class="bi bi-instagram"></i> @bloodflower</p>
+            </div>
+        </div>
+        <div class="footer-bottom mt-4">
+            &copy; 2025 BloodFlower. Todos os direitos reservados.
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

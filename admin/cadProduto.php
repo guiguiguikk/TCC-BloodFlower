@@ -31,9 +31,9 @@ if (mysqli_num_rows($result_check_nome) > 0) {
 
 
 // Verifica se o preço é um número válido
-if (!is_numeric($preco) || $preco < 0) {
+if (!is_numeric($preco)) {
     echo "<script>alert('Preço inválido!');</script>";
-    echo "<script>window.location.href='cadProduto.php';</script>";
+    echo "<script>window.location.href='formProduto.php';</script>";
     exit();
 }
 
