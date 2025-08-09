@@ -282,6 +282,11 @@ $secao = $_GET['secao'] ?? 'perfil';
                             $result_enderecos = mysqli_query($conn, $sql_enderecos);
 
                             echo '<h3>Meus Endereços</h3>';
+                            if (isset($_SESSION['mensagem_endereco'])) {
+                                $mensagem = $_SESSION['mensagem_endereco'];
+                                echo "<div class='alert alert-{$mensagem['tipo']}'>{$mensagem['texto']}</div>";
+                                unset($_SESSION['mensagem_endereco']);
+                            }
 
                             echo '<a href="cadastrar_endereco.php" class="btn btn-success mb-3">Cadastrar Novo Endereço</a>';
 

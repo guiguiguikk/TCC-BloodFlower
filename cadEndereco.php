@@ -1,61 +1,55 @@
 <?php
-
-include ('conexao.php');
-
-$nome = mysqli_real_escape_string($conn, trim($_POST["nome"]));
-$cpf = mysqli_real_escape_string($conn, trim($_POST["cpf"]));
-$telefone = mysqli_real_escape_string($conn, trim($_POST["telefone"]));
-$email = mysqli_real_escape_string($conn, trim($_POST["email"]));
-$password = password_hash($_POST['senha'], PASSWORD_DEFAULT);
-$data_nascimento = mysqli_real_escape_string($conn,$_POST["data_nascimento"]);
-
-
-// Verifica se o email já existe
-$sql_check_email = "SELECT * FROM usuarios WHERE email = '$email'";
-$result_check_email = mysqli_query($conn, $sql_check_email);
-if (mysqli_num_rows($result_check_email) > 0) {
-    echo "<script>alert('Email já cadastrado!');</script>";
-    echo "<script>window.location.href='cadastro.html';</script>";
-    exit();
+session_start();
+if (!isset($_SESSION['id']) || $_SESSION['tipo'] != 'cliente') {
+    header("Location: entrar.php");
+    exit;
 }
 
-// Verifica se o CPF já existe
-$sql_check_cpf = "SELECT * FROM usuarios WHERE cpf = '$cpf'";
-$result_check_cpf = mysqli_query($conn, $sql_check_cpf);
-if (mysqli_num_rows($result_check_cpf) > 0) {
-    echo "<script>alert('CPF já cadastrado!');</script>";
-    echo "<script>window.location.href='cadastro.html';</script>";
-    exit();
-}
+include("conexao.php");
 
 
+    // Captura o ID do cliente
+    $cliente_id = $_SESSION['id'];
+
+    // Limpa e trata os dados
+    $cep = str_replace("-", "", trim($_POST['cep']));
+    $rua = trim($_POST['rua']);
+    $numero = trim($_POST['numero']);
+    $bairro = trim($_POST['bairro']);
+    $cidade = trim($_POST['cidade']);
+    $estado = trim($_POST['estado']);
+
+    // Verifica se todos os campos foram preenchidos
+    if (empty($cep) || empty($rua) || empty($numero) || empty($bairro) || empty($cidade) || empty($estado)) {
+        echo "Todos os campos são obrigatórios!";
+        exit;
+    }
+
+    // Escapa os dados para segurança
+    $cep = mysqli_real_escape_string($conn, $cep);
+    $rua = mysqli_real_escape_string($conn, $rua);
+    $numero = mysqli_real_escape_string($conn, $numero);
+    $bairro = mysqli_real_escape_string($conn, $bairro);
+    $cidade = mysqli_real_escape_string($conn, $cidade);
+    $estado = mysqli_real_escape_string($conn, $estado);
+
+    // Insere os dados
+    $sql = "INSERT INTO enderecos (usuario_id, cep, rua, numero, bairro, cidade, estado)
+            VALUES ('$cliente_id', '$cep', '$rua', '$numero', '$bairro', '$cidade', '$estado')";
+
+    if (mysqli_query($conn, $sql)) {
+        $_SESSION['mensagem_endereco'] = [
+            'tipo' => 'success',
+            'texto' => 'Endereço cadastrado com sucesso!'
+        ];
+    } else {
+        $_SESSION['mensagem_endereco'] = [
+            'tipo' => 'danger',
+            'texto' => 'Erro ao cadastrar endereço: ' . mysqli_error($conn)
+        ];
+    }
 
 
-$sql = "INSERT INTO usuarios (nome, cpf, telefone, email, senha, data_nascimento) 
-VALUES ('$nome', '$cpf', '$telefone', '$email', '$password', '$data_nascimento')";
-
-
-
-$result = mysqli_query($conn, $sql);
-$id_usuario = mysqli_insert_id($conn);
-
-
-if(!$result || !$id_usuario) {
-    echo "<script>alert('Erro ao cadastrar usuário!');</script>";
-    echo "<script>window.location.href='cadastro.html';</script>";
-    exit();
-} else {
-    // Cria o carrinho para o usuário
-    $sql_carrinho = "INSERT INTO carrinhos (usuario_id) VALUES ($id_usuario)";
-    mysqli_query($conn, $sql_carrinho);
-
-
-}
-if (!$id_usuario) {
-    echo "<script>alert('Erro ao cadastrar usuário!');</script>";
-    echo "<script>window.location.href='cadastro.html';</script>";
-    exit();
-}
-?>
-
+    header("Location: perfil.php?secao=endereco");
+    exit;
 

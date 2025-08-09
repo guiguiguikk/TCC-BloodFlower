@@ -9,6 +9,7 @@ include("conexao.php");
 
 $id_usuario = $_SESSION["id"];
 $id_produto = $_POST["produto_id"] ?? null;
+$vem_de = $_POST["vem_de"] ?? null;
 
 if (!$id_produto) {
     header("Location: index.php");
@@ -35,14 +36,43 @@ $result_check = mysqli_query($conn, $sql_check);
 
 if (mysqli_num_rows($result_check) == 0) {
     // Adiciona produto
-    $sql = "INSERT INTO itens_carrinho (carrinho_id, produto_id) VALUES ($id_carrinho, $id_produto)";
-    mysqli_query($conn, $sql);
-    $_SESSION['mensagem_carrinho'] = [
-        'tipo' => 'success',
-        'texto' => 'Produto adicionado ao carrinho com sucesso!'
-    ];
-    header("Location: carrinho.php");
-    exit;
+    $sql_adicionaProduto = "INSERT INTO itens_carrinho (carrinho_id, produto_id) VALUES ($id_carrinho, $id_produto)";
+    $result_adicionaProduto = mysqli_query($conn, $sql_adicionaProduto);
+
+    if ($result_adicionaProduto && $vem_de == "detalhes") {
+        $_SESSION['mensagem_detalhes'] = [
+            'tipo' => 'success',
+            'texto' => 'Produto adicionado ao carrinho com sucesso!'
+        ];
+        header("Location: detalhes.php?id=$id_produto");
+        exit;
+    } elseif ($result_adicionaProduto && $vem_de == "favoritos") {
+        $_SESSION['mensagem_favorito'] = [
+            'tipo' => 'success',
+            'texto' => 'Produto adicionado ao carrinho com sucesso!'
+        ];
+        header("Location: favoritos.php");
+        exit;
+    } elseif (!$result_adicionaProduto && $vem_de == "detalhes") {
+        $_SESSION['mensagem_detalhes'] = [
+            'tipo' => 'danger',
+            'texto' => 'Erro ao adicionar o produto ao carrinho: ' . mysqli_error($conn)
+        ];
+        header("Location: detalhes.php?id=$id_produto");
+        exit;
+    } elseif (!$result_adicionaProduto && $vem_de == "favoritos") {
+        $_SESSION['mensagem_favorito'] = [
+            'tipo' => 'danger',
+            'texto' => 'Erro ao adicionar o produto ao carrinho: ' . mysqli_error($conn)
+        ];
+        header("Location: favoritos.php");
+        exit;
+    } else {
+        echo "Erro ao adicionar o produto ao carrinho: " . mysqli_error($conn) . "<br>";
+        echo "ou esta sem a variavel 'vem_de'";
+
+        exit;
+    }
 } else {
     // Já no carrinho
     $_SESSION['mensagem_detalhes'] = [

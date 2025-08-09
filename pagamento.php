@@ -52,10 +52,11 @@ while ($item = mysqli_fetch_assoc($res_itens)) {
             background: #f8f8f8;
             font-family: 'Rubik', sans-serif;
         }
-                /* NAVBAR */
+
+        /* NAVBAR */
         .navbar {
             background-color: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
 
         .navbar-brand img {
@@ -101,7 +102,7 @@ while ($item = mysqli_fetch_assoc($res_itens)) {
             cursor: pointer;
         }
 
-               /* FOOTER */
+        /* FOOTER */
         footer {
             background: #f8f8f8;
             padding: 30px 0;
@@ -135,19 +136,19 @@ while ($item = mysqli_fetch_assoc($res_itens)) {
             </button>
 
 
-                <div class="d-flex align-items-center gap-3">
-                    <?php if (!isset($_SESSION['email'])) { ?>
-                        <a href="entrar.php" class="text-dark" title="Entrar"><i class="bi bi-box-arrow-in-right fs-4"></i></a>
-                    <?php } else { ?>
-                        <a href="perfil.php" class="text-dark" title="Meu Perfil"><i class="bi bi-person-circle fs-4"></i></a>
-                    <?php } ?>
-                    <a href="carrinho.php" class="text-dark" title="Carrinho"><i class="bi bi-cart fs-4"></i></a>
-                    <a href="favoritos.php" class="text-dark" title="Favoritos"><i class="bi bi-heart fs-4"></i></a>
-                    <?php if (isset($_SESSION['email'])) { ?>
-                        <a href="logoff.php" class="text-dark" title="Sair"><i class="bi bi-box-arrow-right fs-4"></i></a>
-                    <?php } ?>
-                </div>
+            <div class="d-flex align-items-center gap-3">
+                <?php if (!isset($_SESSION['email'])) { ?>
+                    <a href="entrar.php" class="text-dark" title="Entrar"><i class="bi bi-box-arrow-in-right fs-4"></i></a>
+                <?php } else { ?>
+                    <a href="perfil.php" class="text-dark" title="Meu Perfil"><i class="bi bi-person-circle fs-4"></i></a>
+                <?php } ?>
+                <a href="carrinho.php" class="text-dark" title="Carrinho"><i class="bi bi-cart fs-4"></i></a>
+                <a href="favoritos.php" class="text-dark" title="Favoritos"><i class="bi bi-heart fs-4"></i></a>
+                <?php if (isset($_SESSION['email'])) { ?>
+                    <a href="logoff.php" class="text-dark" title="Sair"><i class="bi bi-box-arrow-right fs-4"></i></a>
+                <?php } ?>
             </div>
+        </div>
         </div>
     </nav>
     <div class="container mt-5 pt-5 ">
@@ -215,74 +216,73 @@ while ($item = mysqli_fetch_assoc($res_itens)) {
     </div>
 
     <!-- FOOTER -->
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <h5>BloodFlower</h5>
-                <p>Vista-se com originalidade e atitude. Roupas alternativas para quem quer se destacar.</p>
+    <<footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5>BloodFlower</h5>
+                    <p>Vista-se com originalidade e atitude. Roupas alternativas para quem quer se destacar.</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-muted text-decoration-none">Início</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Loja</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Contato</h5>
+                    <p><i class="bi bi-envelope"></i> contato@bloodflower.com</p>
+                    <p><i class="bi bi-instagram"></i> @bloodflower</p>
+                </div>
             </div>
-            <div class="col-md-4 mb-3">
-                <h5>Links</h5>
-                <ul class="list-unstyled">
-                    <li><a href="#" class="text-muted text-decoration-none">Início</a></li>
-                    <li><a href="#" class="text-muted text-decoration-none">Loja</a></li>
-                    <li><a href="#" class="text-muted text-decoration-none">Contato</a></li>
-                </ul>
-            </div>
-            <div class="col-md-4 mb-3">
-                <h5>Contato</h5>
-                <p><i class="bi bi-envelope"></i> contato@bloodflower.com</p>
-                <p><i class="bi bi-instagram"></i> @bloodflower</p>
+            <div class="footer-bottom mt-4">
+                &copy; 2025 BloodFlower. Todos os direitos reservados.
             </div>
         </div>
-        <div class="footer-bottom mt-4">
-            &copy; 2025 BloodFlower. Todos os direitos reservados.
+        </footer>
+        <!-- MODAL NOVO ENDEREÇO -->
+        <div class="modal fade" id="modalEndereco" tabindex="-1" aria-labelledby="modalEnderecoLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="cadastrar_endereco.php" method="POST" class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEnderecoLabel"><i class="bi bi-house-add"></i> Novo Endereço</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="voltar_para_pagamento" value="1">
+                        <div class="mb-2">
+                            <label class="form-label">CEP</label>
+                            <input type="text" class="form-control" name="cep" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Logradouro</label>
+                            <input type="text" class="form-control" name="logradouro" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Número</label>
+                            <input type="text" class="form-control" name="numero" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Cidade</label>
+                            <input type="text" class="form-control" name="cidade" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Estado</label>
+                            <input type="text" class="form-control" name="estado" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Tipo (Casa, Trabalho...)</label>
+                            <input type="text" class="form-control" name="tipo">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Salvar</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-</footer>
-
-    <!-- MODAL NOVO ENDEREÇO -->
-    <div class="modal fade" id="modalEndereco" tabindex="-1" aria-labelledby="modalEnderecoLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form action="cadastrar_endereco.php" method="POST" class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalEnderecoLabel"><i class="bi bi-house-add"></i> Novo Endereço</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="voltar_para_pagamento" value="1">
-                    <div class="mb-2">
-                        <label class="form-label">CEP</label>
-                        <input type="text" class="form-control" name="cep" required>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Logradouro</label>
-                        <input type="text" class="form-control" name="logradouro" required>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Número</label>
-                        <input type="text" class="form-control" name="numero" required>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Cidade</label>
-                        <input type="text" class="form-control" name="cidade" required>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Estado</label>
-                        <input type="text" class="form-control" name="estado" required>
-                    </div>
-                    <div class="mb-2">
-                        <label class="form-label">Tipo (Casa, Trabalho...)</label>
-                        <input type="text" class="form-control" name="tipo">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Salvar</button>
-                </div>
-            </form>
-        </div>
-    </div>
 </body>
 
 </html>

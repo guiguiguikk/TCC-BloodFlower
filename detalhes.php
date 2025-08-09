@@ -2,6 +2,11 @@
 session_start();
 include("conexao.php");
 
+if (!isset($_SESSION['id']) || $_SESSION["tipo"] != "cliente") {
+    header("Location: entrar.php");
+    exit;
+}
+
 if (!isset($_GET['id'])) {
     header("Location: index.php");
     exit;
@@ -17,6 +22,33 @@ if (mysqli_num_rows($result) == 0) {
 }
 
 $produto = mysqli_fetch_assoc($result);
+
+//verificação para ver se o item ja está nos favoritos
+$favorito = "SELECT * FROM favorito WHERE usuario_id = " . $_SESSION['id'];
+$result_favorito = mysqli_query($conn, $favorito);
+
+$id_favorito = mysqli_fetch_assoc($result_favorito)['id_favorito'] ?? null;
+
+
+$sql_check_favorito = "SELECT * FROM item_favorito WHERE favorito_id = " . $id_favorito . " AND produto_id = " . $produto['id'];
+$result_check_favorito = mysqli_query($conn, $sql_check_favorito);
+if (!$result_check_favorito) {
+    echo "Erro ao verificar os favoritos: " . mysqli_error($conn);
+    exit;
+}
+
+//verificaçao para ver se o item ja está no carrinho
+$carrinho = "SELECT * FROM carrinhos WHERE usuario_id = " . $_SESSION['id'];
+$result_carrinho = mysqli_query($conn, $carrinho);
+
+$id_carrinho = mysqli_fetch_assoc($result_carrinho)['id_carrinho'] ?? null;
+
+$sql_check_carrinho = "SELECT * FROM itens_carrinho WHERE carrinho_id = " . $id_carrinho . " AND produto_id = " . $produto['id'];
+$result_check_carrinho = mysqli_query($conn, $sql_check_carrinho);
+if (!$result_check_carrinho) {
+    echo "Erro ao verificar o carrinho: " . mysqli_error($conn);
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -113,6 +145,27 @@ $produto = mysqli_fetch_assoc($result);
             padding-top: 15px;
             color: #999;
         }
+
+        /* Cards da recomendação */
+        .carousel .card {
+            height: 320px;
+            /* Altura fixa para todos os cards */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Imagens dos cards */
+        .carousel .card img {
+            height: 180px;
+            /* altura fixa para imagem */
+            object-fit: contain;
+            /* preserva proporção sem cortar */
+            width: 100%;
+            border-radius: 8px 8px 0 0;
+            background-color: #fff;
+            /* fundo branco para contrastar */
+        }
     </style>
 </head>
 
@@ -176,19 +229,114 @@ $produto = mysqli_fetch_assoc($result);
                 <div class="descricao-produto"><?= nl2br(htmlspecialchars($produto['descricao'])) ?></div>
 
                 <div class="botoes-produto mt-4">
-                    <form method="POST" action="adicionar_carrinho.php">
-                        <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
-                        <button type="submit" class="btn btn-danger w-100"><i class="bi bi-cart-plus me-2"></i> Adicionar ao Carrinho</button>
-                    </form>
+                    <?php if (isset($result_check_carrinho) && mysqli_num_rows($result_check_carrinho) > 0): ?>
+                        <form action="removerCarrinho.php" method="post">
+                            <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
+                            <input type="hidden" name="vem_de" value="detalhes"> <!-- de onde veio -->
+                            <button type="submit" class="btn btn-success w-100"><i class="bi bi-check-circle me-2"></i> Já no Carrinho</button>
+                        </form>
+                    <?php else: ?>
+                        <form method="POST" action="adicionar_carrinho.php">
+                            <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
+                            <input type="hidden" name="vem_de" value="detalhes"> <!-- de onde veio -->
+                            <button type="submit" class="btn btn-danger w-100"><i class="bi bi-cart-plus me-2"></i> Adicionar ao Carrinho</button>
+                        </form>
+                    <?php endif; ?>
+                    <?php if (isset($result_check_favorito) && mysqli_num_rows($result_check_favorito) > 0): ?>
+                        <form method="POST" action="removerFavorito.php">
+                            <input type="hidden" name="vem_de" value="detalhes"> <!-- de onde veio -->
+                            <input type="hidden" name="produto_id" value="<?= htmlspecialchars($produto['id']) ?>">
+                            <button type="submit" class="btn btn-outline-danger w-100">
+                                <i class="bi bi-heart-fill me-2"></i> Remover dos Favoritos
+                            </button>
+                        </form>
+                    <?php else: ?>
 
-                    <form method="POST" action="add_favorito.php">
-                        <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
-                        <button type="submit" class="btn btn-outline-dark w-100"><i class="bi bi-heart me-2"></i> Favoritar</button>
-                    </form>
+                        <form method="POST" action="add_favorito.php">
+                            <input type="hidden" name="vem_de" value="detalhes"> <!-- de onde veio -->
+                            <input type="hidden" name="produto_id" value="<?= htmlspecialchars($produto['id']) ?>">
+                            <button type="submit" class="btn btn-outline-dark w-100">
+                                <i class="bi bi-heart me-2"></i> Favoritar
+                            </button>
+                        </form>
+                    <?php endif; ?>
+
                 </div>
             </div>
         </div>
     </div>
+
+    <?php
+    // Consulta recomendada: produtos da mesma categoria ou marca, menos o produto atual
+    $categoria_id = $produto['categoria_id'];
+    $marca_id = $produto['marca_id'];
+    $produto_id = $produto['id'];
+
+    $sql_recomendados = "SELECT * FROM produtos 
+    WHERE id != $produto_id 
+    AND (categoria_id = $categoria_id OR marca_id = $marca_id)
+    LIMIT 10";
+
+    $result_recomendados = mysqli_query($conn, $sql_recomendados);
+
+    if (mysqli_num_rows($result_recomendados) > 0):
+    ?>
+        <div class="container mt-5">
+            <h3 class="mb-4">Você pode gostar também</h3>
+            <div id="carouselRecomendados" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <?php
+                    $count = 0;
+                    // Cada slide do carrossel vai ter até 4 produtos (para desktop)
+                    // Vamos agrupar produtos em "slides"
+                    $produtos_por_slide = 4;
+                    $produtos = [];
+                    while ($row = mysqli_fetch_assoc($result_recomendados)) {
+                        $produtos[] = $row;
+                    }
+
+                    $total = count($produtos);
+                    $slides = ceil($total / $produtos_por_slide);
+
+                    for ($i = 0; $i < $slides; $i++):
+                    ?>
+                        <div class="carousel-item <?= $i == 0 ? 'active' : '' ?>">
+                            <div class="row">
+                                <?php
+                                for ($j = 0; $j < $produtos_por_slide; $j++):
+                                    $index = $i * $produtos_por_slide + $j;
+                                    if ($index >= $total) break;
+                                    $p = $produtos[$index];
+                                ?>
+                                    <div class="col-6 col-md-3">
+                                        <div class="card">
+                                            <img src="imagens/<?= htmlspecialchars($p['imagem']) ?>" class="card-img-top" alt="<?= htmlspecialchars($p['nome']) ?>">
+                                            <div class="card-body">
+                                                <h6 class="card-title"><?= htmlspecialchars($p['nome']) ?></h6>
+                                                <p class="card-text text-danger">R$ <?= number_format($p['preco'], 2, ',', '.') ?></p>
+                                                <a href="detalhes.php?id=<?= $p['id'] ?>" class="btn btn-sm btn-outline-primary w-100">Ver Produto</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endfor; ?>
+                            </div>
+                        </div>
+                    <?php endfor; ?>
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselRecomendados" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselRecomendados" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Próximo</span>
+                </button>
+            </div>
+        </div>
+    <?php
+    endif;
+    ?>
 
     <!-- FOOTER (igual ao index.php) -->
     <footer>

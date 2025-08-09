@@ -1,10 +1,22 @@
 <?php
 session_start();
-if (!isset($_SESSION['id']) || $_SESSION['tipo'] != 'cliente') {
+include("conexao.php");
+if (!isset($_SESSION['id']) || $_SESSION["tipo"] != "cliente") {
     header("Location: entrar.php");
     exit;
 }
-include("conexao.php");
+$id_usuario = $_SESSION["id"];
+$id_endereco = $_GET['id'];
+$sql = "SELECT * FROM enderecos WHERE id_endereco = $id_endereco AND usuario_id = $id_usuario";
+$result = mysqli_query($conn, $sql);
+
+if ($result && mysqli_num_rows($result) === 1) {
+    $endereco = mysqli_fetch_assoc($result);
+} else {
+    $_SESSION['erro_endereco'] = "Endereço não encontrado.";
+    header("Location: perfil.php?secao=endereco");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -63,30 +75,31 @@ include("conexao.php");
     <div class="form-container">
         <img src="imagens/logoBloodflower.png" alt="BloodFlower" class="logo">
         <h2><i class="bi bi-geo-alt-fill"></i> Novo Endereço</h2>
-        <form method="POST" action="cadEndereco.php">
+        <form method="POST" action="updateEndereco.php">
+            <input type="hidden" name="id_endereco" value="<?php echo $endereco['id_endereco']; ?>">
             <div class="mb-3">
                 <label for="cep" class="form-label">CEP</label>
-                <input type="text" class="form-control" id="cep" name="cep" required onblur="buscarCep(this.value)">
+                <input type="text" class="form-control" id="cep" name="cep" value="<?php echo $endereco['cep']; ?>" required onblur="buscarCep(this.value)">
             </div>
             <div class="mb-3">
                 <label for="rua" class="form-label">Rua</label>
-                <input type="text" class="form-control" id="rua" name="rua" required>
+                <input type="text" class="form-control" id="rua" name="rua" value="<?php echo $endereco['rua']; ?>" required>
             </div>
             <div class="mb-3">
                 <label for="numero" class="form-label">Número</label>
-                <input type="text" class="form-control" id="numero" name="numero" required>
+                <input type="text" class="form-control" id="numero" name="numero" value="<?php echo $endereco['numero']; ?>" required>
             </div>
             <div class="mb-3">
                 <label for="bairro" class="form-label">Bairro</label>
-                <input type="text" class="form-control" id="bairro" name="bairro" required>
+                <input type="text" class="form-control" id="bairro" name="bairro" value="<?php echo $endereco['bairro']; ?>" required>
             </div>
             <div class="mb-3">
                 <label for="cidade" class="form-label">Cidade</label>
-                <input type="text" class="form-control" id="cidade" name="cidade" required>
+                <input type="text" class="form-control" id="cidade" name="cidade" value="<?php echo $endereco['cidade']; ?>" required>
             </div>
             <div class="mb-3">
                 <label for="estado" class="form-label">Estado</label>
-                <input type="text" class="form-control" id="estado" name="estado" required>
+                <input type="text" class="form-control" id="estado" name="estado" value="<?php echo $endereco['estado']; ?>" required>
             </div>
             <button type="submit" class="btn btn-custom w-100">Salvar Endereço</button>
         </form>

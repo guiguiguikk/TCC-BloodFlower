@@ -191,7 +191,11 @@ $itens = mysqli_query($conn, $sql_itens);
                             </div>
                             <div class="text-end">
                                 <p class="fw-semibold text-success">Subtotal:<br> R$ <?= number_format($subtotal, 2, ',', '.') ?></p>
-                                <a href="removerCarrinho.php?produto_id=<?= $produto_id ?>" class="btn btn-sm btn-outline-danger">Remover</a>
+                                <form action="removerCarrinho.php" method="post">
+                                    <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
+                                    <input type="hidden" name="vem_de" value="carrinho">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Remover</button>
+                                </form>
                             </div>
                         </div>
                 <?php

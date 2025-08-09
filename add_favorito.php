@@ -26,15 +26,24 @@ if (mysqli_num_rows($result) == 0) {
 
     // Adiciona o produto ao favorito
     $sql_adicionaProduto = "INSERT INTO item_favorito (favorito_id, produto_id) VALUES ($id_favorito, $id_produto)";
-    mysqli_query($conn, $sql_adicionaProduto);
+    $result_adicionaProduto = mysqli_query($conn, $sql_adicionaProduto);
 
-    echo "<script>alert('Produto adicionado aos favoritos!');</script>";
-    echo "<script>window.location.href='index.php';</script>";
-
-
-
-
-}else {
+    if ($result_adicionaProduto) {
+        $_SESSION['mensagem_detalhes'] = [
+            'tipo' => 'success',
+            'texto' => 'Produto adicionado aos favoritos com sucesso!'
+        ];
+        header("Location: detalhes.php?id=$id_produto");
+        exit;
+    } else {
+        $_SESSION['mensagem_detalhes'] = [
+            'tipo' => 'danger',
+            'texto' => 'Erro ao adicionar o produto aos favoritos: ' . mysqli_error($conn)
+        ];
+        header("Location: detalhes.php?id=$id_produto");
+        exit;
+    }
+} else {
     // favorito já existe, adiciona o produto ao favorito existente
     $row = mysqli_fetch_assoc($result);
     $id_favorito = $row["id_favorito"];
@@ -48,15 +57,22 @@ if (mysqli_num_rows($result) == 0) {
     if (mysqli_num_rows($result_check) == 0) {
         // Adiciona o produto ao favorito
         $sql = "INSERT INTO item_favorito (favorito_id, produto_id) VALUES ($id_favorito, $id_produto)";
-        mysqli_query($conn, $sql);
+        $result_adicionaProduto = mysqli_query($conn, $sql);
 
-        echo "<script>alert('Produto adicionado aos favoritos!');</script>";
-        echo "<script>window.location.href='favoritos.php';</script>";
-    } else {
-        // Produto já está nos favoritos
-        echo "<script>alert('Produto já está nos favoritos!');</script>";
-        echo "<script>window.location.href='detalhes.php?id=$id_produto';</script>";
+        if ($result_adicionaProduto) {
+            $_SESSION['mensagem_detalhes'] = [
+                'tipo' => 'success',
+                'texto' => 'Produto adicionado aos favoritos com sucesso!'
+            ];
+            header("Location: detalhes.php?id=$id_produto");
+            exit;
+        } else {
+            $_SESSION['mensagem_detalhes'] = [
+                'tipo' => 'danger',
+                'texto' => 'Erro ao adicionar o produto aos favoritos: ' . mysqli_error($conn)
+            ];
+            header("Location: detalhes.php?id=$id_produto");
+            exit;
+        }
     }
-
-
 }
