@@ -80,7 +80,7 @@ mysqli_query($conn, $sql_pagamento);
 
 // Limpa o carrinho
 mysqli_query($conn, "DELETE FROM itens_carrinho WHERE carrinho_id = $id_carrinho");
-mysqli_query($conn, "DELETE FROM carrinhos WHERE id_carrinho = $id_carrinho");
+
 
 // Redireciona para página de confirmação
 header("Location: pedido_confirmado.php?pedido=$id_pedido");

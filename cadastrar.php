@@ -34,6 +34,12 @@ $sql = "INSERT INTO usuarios (nome, cpf, telefone, email, senha, data_nascimento
 $result = mysqli_query($conn, $sql);
 $id_usuario = mysqli_insert_id($conn);
 
+$sql_carrinho = "INSERT INTO carrinhos (usuario_id) VALUES ($id_usuario)";
+$sql_favorito = "INSERT INTO favorito (usuario_id) VALUES ($id_usuario)";
+
+mysqli_query($conn, $sql_favorito);
+mysqli_query($conn, $sql_carrinho);
+
 if (!$result || !$id_usuario) {
     $_SESSION['erro_cadastro'] = "Erro ao cadastrar usuário.";
     header("Location: cadastro.php");

@@ -245,7 +245,7 @@ while ($item = mysqli_fetch_assoc($res_itens)) {
         <!-- MODAL NOVO ENDEREÇO -->
         <div class="modal fade" id="modalEndereco" tabindex="-1" aria-labelledby="modalEnderecoLabel" aria-hidden="true">
             <div class="modal-dialog">
-                <form action="cadastrar_endereco.php" method="POST" class="modal-content">
+                <form action="cadEndereco.php" method="POST" class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalEnderecoLabel"><i class="bi bi-house-add"></i> Novo Endereço</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
@@ -254,35 +254,86 @@ while ($item = mysqli_fetch_assoc($res_itens)) {
                         <input type="hidden" name="voltar_para_pagamento" value="1">
                         <div class="mb-2">
                             <label class="form-label">CEP</label>
-                            <input type="text" class="form-control" name="cep" required>
+                            <input type="text" class="form-control" name="cep" id="cep" required onblur="buscarCep(this.value)">
                         </div>
                         <div class="mb-2">
                             <label class="form-label">Logradouro</label>
-                            <input type="text" class="form-control" name="logradouro" required>
+                            <input type="text" class="form-control" name="rua" id="rua" required>
                         </div>
                         <div class="mb-2">
                             <label class="form-label">Número</label>
-                            <input type="text" class="form-control" name="numero" required>
+                            <input type="text" class="form-control" name="numero" id="numero" required>
                         </div>
                         <div class="mb-2">
                             <label class="form-label">Cidade</label>
-                            <input type="text" class="form-control" name="cidade" required>
+                            <input type="text" class="form-control" name="cidade" id="cidade" required>
                         </div>
                         <div class="mb-2">
                             <label class="form-label">Estado</label>
-                            <input type="text" class="form-control" name="estado" required>
+                            <input type="text" class="form-control" name="estado" id="estado" required>
                         </div>
                         <div class="mb-2">
-                            <label class="form-label">Tipo (Casa, Trabalho...)</label>
-                            <input type="text" class="form-control" name="tipo">
+                            <label class="form-label">Bairro</label>
+                            <input type="text" class="form-control" name="bairro" id="bairro" required>
+
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Salvar</button>
+                    <div class="modal-footer justify-content-center">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Salvar
+                        </button>
                     </div>
-                </form>
             </div>
         </div>
+        </form>
+        </div>
+        </div>
+        <script>
+            function buscarCep(cep) {
+                cep = cep.replace(/\D/g, '');
+
+                // Limpa os campos antes da busca
+                limparCampos();
+
+                if (cep.length !== 8) {
+                    alert("CEP inválido.");
+                    return;
+                }
+
+                fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                    .then(response => response.json())
+                    .then(dados => {
+                        if (dados.erro) {
+                            alert("CEP não encontrado.");
+                            limparCampos();
+                            return;
+                        }
+
+                        document.getElementById('rua').value = dados.logradouro;
+                        document.getElementById('bairro').value = dados.bairro;
+                        document.getElementById('cidade').value = dados.localidade;
+                        document.getElementById('estado').value = dados.uf;
+
+                        // Torna os campos somente leitura
+                        document.getElementById('rua').readOnly = true;
+                        document.getElementById('bairro').readOnly = true;
+                        document.getElementById('cidade').readOnly = true;
+                        document.getElementById('estado').readOnly = true;
+                    })
+                    .catch(() => {
+                        alert("Erro ao buscar o CEP. Tente novamente.");
+                        limparCampos();
+                    });
+            }
+
+            function limparCampos() {
+                const campos = ['rua', 'bairro', 'cidade', 'estado'];
+                campos.forEach(id => {
+                    document.getElementById(id).value = "";
+                    document.getElementById(id).readOnly = false;
+                });
+            }
+        </script>
 </body>
 
 </html>

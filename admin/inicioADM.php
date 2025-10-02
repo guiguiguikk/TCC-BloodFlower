@@ -80,12 +80,12 @@ include("../conexao.php");
         <div class="collapse navbar-collapse" id="navbarNavAdmin">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link active fw-bold text-danger" href="inicioADM.php"><i class="bi bi-box"></i> Produtos</a></li>
-                <li class="nav-item"><a class="nav-link" href="pedidos.php"><i class="bi bi-bag-check"></i> Pedidos</a></li>
-                <li class="nav-item"><a class="nav-link" href="avaliacoes.php"><i class="bi bi-star"></i> Avaliações</a></li>
-                <li class="nav-item"><a class="nav-link" href="usuarios.php"><i class="bi bi-people"></i> Usuários</a></li>
-                <li class="nav-item"><a class="nav-link" href="enderecos.php"><i class="bi bi-geo-alt"></i> Endereços</a></li>
-                <li class="nav-item"><a class="nav-link" href="marcas.php"><i class="bi bi-tags"></i> Marcas</a></li>
-                <li class="nav-item"><a class="nav-link" href="categorias.php"><i class="bi bi-folder"></i> Categorias</a></li>
+                <li class="nav-item"><a class="nav-link" href="?secao=pedidos"><i class="bi bi-bag-check"></i> Pedidos</a></li>
+                <li class="nav-item"><a class="nav-link" href="?secao=avaliacoes"><i class="bi bi-star"></i> Avaliações</a></li>
+                <li class="nav-item"><a class="nav-link" href="?secao=usuario"><i class="bi bi-people"></i> Usuários</a></li>
+                <li class="nav-item"><a class="nav-link" href="?secao=enderecos"><i class="bi bi-geo-alt"></i> Endereços</a></li>
+                <li class="nav-item"><a class="nav-link" href="?secao=marcas"><i class="bi bi-tags"></i> Marcas</a></li>
+                <li class="nav-item"><a class="nav-link" href="?secao=categorias"><i class="bi bi-folder"></i> Categorias</a></li>
             </ul>
             <a href="../logoff.php" class="btn btn-outline-dark"><i class="bi bi-box-arrow-right"></i> Sair</a>
         </div>
