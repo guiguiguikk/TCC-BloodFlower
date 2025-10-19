@@ -29,6 +29,7 @@ $sql_itens = "
     WHERE ip.id_pedido = $id_pedido
 ";
 $result_itens = mysqli_query($conn, $sql_itens);
+
 ?>
 
 <!DOCTYPE html>
@@ -175,3 +176,5 @@ $result_itens = mysqli_query($conn, $sql_itens);
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<?php
+var_dump($pedido);

@@ -72,7 +72,7 @@ if (isset($_SESSION['id'])) {
     ";
     $res_verifica_compra = mysqli_query($conn, $sql_verifica_compra);
     if (mysqli_num_rows($res_verifica_compra) > 0) {
-        $sql_ja_avaliou = "SELECT id FROM avaliacoes WHERE usuario_id = $usuario_id AND produto_id = $id LIMIT 1";
+        $sql_ja_avaliou = "SELECT id_avaliacao FROM avaliacoes WHERE usuario_id = $usuario_id AND produto_id = $id LIMIT 1";
         $res_ja_avaliou = mysqli_query($conn, $sql_ja_avaliou);
         if (mysqli_num_rows($res_ja_avaliou) == 0) {
             $podeAvaliar = true;
