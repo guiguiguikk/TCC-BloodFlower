@@ -321,10 +321,11 @@ while ($item = mysqli_fetch_assoc($res_itens)) {
                         data-bs-toggle="modal" data-bs-target="#modalEndereco">
                         <i class="bi bi-plus-circle me-1"></i> Cadastrar Novo Endereço
                     </button>
-
-                    <button type="submit" class="btn btn-danger w-100 mt-4 py-3 fs-5 fw-bold shadow-sm">
-                        <i class="bi bi-bag-check-fill me-2"></i> Confirmar Pagamento
-                    </button>
+                    <form action="processar_pagamento.php" method="get">
+                        <button type="submit" class="btn btn-danger w-100 mt-4 py-3 fs-5 fw-bold shadow-sm">
+                            <i class="bi bi-bag-check-fill me-2"></i> Confirmar Pagamento
+                        </button>
+                    </form>
                 </div>
             </div>
             <!-- MODAL NOVO ENDEREÇO (versão moderna BloodFlower) -->

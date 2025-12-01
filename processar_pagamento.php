@@ -10,7 +10,7 @@ if (!isset($_SESSION['id']) || $_SESSION["tipo"] != "cliente") {
 
 $id_usuario = $_SESSION["id"];
 
-// Obtém o carrinho do usuário
+// carrinho do usuario
 $sql_carrinho = "SELECT * FROM carrinhos WHERE usuario_id = $id_usuario";
 $result_carrinho = mysqli_query($conn, $sql_carrinho);
 
@@ -21,7 +21,7 @@ if (!$result_carrinho || mysqli_num_rows($result_carrinho) == 0) {
 $carrinho = mysqli_fetch_assoc($result_carrinho);
 $id_carrinho = $carrinho['id_carrinho'];
 
-// Pega os itens do carrinho
+// pegando itens do carrinho
 $sql_itens = "SELECT * FROM itens_carrinho WHERE carrinho_id = $id_carrinho";
 $result_itens = mysqli_query($conn, $sql_itens);
 
@@ -29,7 +29,7 @@ if (!$result_itens || mysqli_num_rows($result_itens) == 0) {
     die("Seu carrinho está vazio.");
 }
 
-// Calcula o total do pedido
+// calculando total do pedido
 $total = 0;
 $itens = [];
 

@@ -49,6 +49,21 @@ if ($row = mysqli_fetch_assoc($result)) {
         header("Location: carrinho.php");
         exit;
         
+    } elseif (mysqli_query($conn, $sql_delete) && $vem_de == "favoritos") {
+        $_SESSION['mensagem_carrinho'] = [
+            'tipo' => 'success',
+            'texto' => 'Produto removido do carrinho com sucesso!'
+        ];
+        header("Location: favoritos.php");
+        exit;
+    } elseif (!mysqli_query($conn, $sql_delete) && $vem_de == "favoritos") {
+        $_SESSION['mensagem_carrinho'] = [
+            'tipo' => 'danger',
+            'texto' => 'Erro ao remover o produto do carrinho: ' . mysqli_error($conn)
+        ];
+        header("Location: carrinho.php");
+        exit;
+        
     } else {
         echo "Erro ao remover o item do carrinho.";
     }
