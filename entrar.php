@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 if (isset($_SESSION['id'])) {
     header("Location: index.php");
@@ -8,6 +8,7 @@ if (isset($_SESSION['id'])) {
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <title>Entrar - BloodFlower</title>
@@ -110,77 +111,81 @@ if (isset($_SESSION['id'])) {
         }
     </style>
 </head>
+
 <body>
 
-<div class="login-card">
-    <img src="imagens/LogoBloodFlower.png" alt="Logo BloodFlower" class="logo">
+    <div class="login-card">
+        <img src="imagens/LogoBloodFlower.png" alt="Logo BloodFlower" class="logo">
 
-    <h2>Entrar na BloodFlower</h2>
+        <h2>Entrar na BloodFlower</h2>
 
-    <!-- Mensagem de erro -->
-    <?php if (isset($_SESSION['erro_login'])): ?>
-        <div class="alert alert-danger text-center" role="alert">
-            <?= $_SESSION['erro_login'] ?>
-        </div>
-        <?php unset($_SESSION['erro_login']); ?>
-    <?php endif; ?>
+        <!-- Mensagem de erro -->
+        <?php if (isset($_SESSION['erro_login'])): ?>
+            <div class="alert alert-danger text-center" role="alert">
+                <?= $_SESSION['erro_login'] ?>
+            </div>
+            <?php unset($_SESSION['erro_login']); ?>
+        <?php endif; ?>
 
-    <form action="login.php" method="POST">
-        <div class="mb-3 input-group">
-            <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-            <input 
-                type="email" 
-                class="form-control" 
-                name="email" 
-                placeholder="E-mail" 
-                required
-            >
-        </div>
+        <form action="login.php" method="POST">
+            <div class="mb-3 input-group">
+                <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                <input
+                    type="email"
+                    class="form-control"
+                    name="email"
+                    placeholder="E-mail"
+                    required>
+            </div>
 
-        <div class="mb-4 input-group">
-            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-            <input 
-                type="password" 
-                class="form-control" 
-                id="senha" 
-                name="password" 
-                placeholder="Senha"
-                minlength="8" 
-                required
-            >
-            <span class="input-group-text toggle-password" onclick="togglePassword()">
-                <i class="bi bi-eye-slash" id="eye-icon"></i>
-            </span>
-        </div>
+            <div class="mb-4 input-group">
+                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                <input
+                    type="password"
+                    class="form-control"
+                    id="senha"
+                    name="password"
+                    placeholder="Senha"
+                    minlength="8"
+                    required>
+                <span class="input-group-text toggle-password" onclick="togglePassword()">
+                    <i class="bi bi-eye-slash" id="eye-icon"></i>
+                </span>
 
-        <button type="submit" class="btn btn-login w-100">Entrar</button>
+            </div>
+            <div class="link">
+                <a href="recuperarSenha.php">Esqueceu a senha?</a>
+            </div>
 
-        <div class="link">
-            Não tem uma conta? <a href="cadastro.php">Cadastre-se</a>
-        </div>
-    </form>
-</div>
+            <button type="submit" class="btn btn-login w-100">Entrar</button>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            <div class="link">
+                Não tem uma conta? <a href="cadastro.php">Cadastre-se</a>
+            </div>
+        </form>
+    </div>
 
-<!-- JS para mostrar/ocultar senha -->
-<script>
-    function togglePassword() {
-        const senhaInput = document.getElementById('senha');
-        const eyeIcon = document.getElementById('eye-icon');
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        if (senhaInput.type === 'password') {
-            senhaInput.type = 'text';
-            eyeIcon.classList.remove('bi-eye-slash');
-            eyeIcon.classList.add('bi-eye');
-        } else {
-            senhaInput.type = 'password';
-            eyeIcon.classList.remove('bi-eye');
-            eyeIcon.classList.add('bi-eye-slash');
+    <!-- JS para mostrar/ocultar senha -->
+    <script>
+        function togglePassword() {
+            const senhaInput = document.getElementById('senha');
+            const eyeIcon = document.getElementById('eye-icon');
+
+            if (senhaInput.type === 'password') {
+                senhaInput.type = 'text';
+                eyeIcon.classList.remove('bi-eye-slash');
+                eyeIcon.classList.add('bi-eye');
+            } else {
+                senhaInput.type = 'password';
+                eyeIcon.classList.remove('bi-eye');
+                eyeIcon.classList.add('bi-eye-slash');
+            }
         }
-    }
-</script>
+    </script>
 
 </body>
+
 </html>

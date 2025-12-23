@@ -79,6 +79,8 @@ if (isset($_SESSION['id'])) {
         }
     }
 }
+$sql_tamanhos = "SELECT * FROM tamanhos";
+$result_tamanhos = mysqli_query($conn, $sql_tamanhos);
 ?>
 
 <!DOCTYPE html>
@@ -351,6 +353,25 @@ if (isset($_SESSION['id'])) {
                             <button type="submit" class="btn btn-outline-dark w-100"><i class="bi bi-heart me-2"></i> Favoritar</button>
                         </form>
                     <?php endif; ?>
+
+                    <?php 
+                    if (mysqli_num_rows($result_tamanhos) > 0){
+                        ?>
+                        <div class="mt-3">
+                            <label for="tamanho" class="form-label fw-semibold">Escolha o Tamanho:</label>
+                                <?php
+                                while ($tamanho = mysqli_fetch_assoc($result_tamanhos)) {?>
+                                <input type="radio" class="btn-check" name="tamanho" id="tamanho<?= $tamanho['id'] ?>" autocomplete="off">
+                                <label class="btn btn-outline-secondary me-2" for="tamanho<?= $tamanho['id'] ?>"><?= htmlspecialchars($tamanho['nome']) ?></label>
+                                <?php
+                                   
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                        <?php
+                    }  ?>
                 </div>
             </div>
         </div>
