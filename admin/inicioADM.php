@@ -96,6 +96,8 @@ $secao = $_GET['secao'] ?? 'produto';
                                                     else echo "nav-link" ?>" href="?secao=marcas"><i class="bi bi-tags"></i> Marcas</a></li>
                     <li class="nav-item"><a class="<?php if ($secao  == "categorias") echo "nav-link active fw-bold text-danger";
                                                     else echo "nav-link" ?>" href="?secao=categorias"><i class="bi bi-folder"></i> Categorias</a></li>
+                    <li class="nav-item"><a class="<?php if ($secao  == "tamanhos") echo "nav-link active fw-bold text-danger";
+                                                    else echo "nav-link" ?>" href="?secao=tamanhos"><i class="bi bi-tag"></i> Tamanhos</a></li>
                 </ul>
                 <a href="../logoff.php" class="btn btn-outline-dark"><i class="bi bi-box-arrow-right"></i> Sair</a>
             </div>
@@ -519,7 +521,55 @@ $secao = $_GET['secao'] ?? 'produto';
 
     <?php
             break;
+            case "tamanhos":
+        ?>
+                    <div class="container py-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1>Gerenciar Tamanhos</h1>
+                    <a href="formTamanho.php" class="btn btn-admin"><i class="bi bi-plus-lg"></i> Novo Tamanho</a>
+                </div>
+
+                <?php
+                $sql = "SELECT * FROM tamanhos";
+
+                $result = mysqli_query($conn, $sql);
+
+
+                if (mysqli_num_rows($result) > 0) {
+                    echo "<div class='table-responsive'>";
+                    echo "<table class='table table-striped table-hover align-middle'>";
+                    echo "<thead><tr>
+                <th>ID da Categoria</th>
+                <th>Nome</th>
+                <th class='text-center' colspan='2'>Ações</th>
+              </tr></thead><tbody>";
+
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<tr>";
+                        echo "<td>{$row['id']}</td>";
+                        echo "<td>{$row['nome']}</td>";
+                        echo "<td class='text-center'>
+                    <a href='excluirCategoria.php?id_tamanho={$row['id']}' class='text-danger' onclick='return confirm(\"Tem certeza que deseja excluir este produto?\")'>
+                        <i class='bi bi-trash'></i>
+                    </a>
+                  </td>";
+                        echo "<td class='text-center'>
+                    <a href='formEditCategoria.php?id_tamanho={$row['id']}' class='text-primary'><i class='bi bi-pencil-square'></i></a>
+                  </td>";
+                        echo "</tr>";
+                    }
+
+                    echo "</tbody></table></div>";
+                } else {
+                    echo "<p class='text-muted text-center mt-4'>Nenhum produto cadastrado.</p>";
+                }
+                ?>
+            </div>
+
+    <?php
+            break;
     }
+    
     ?>
 
 
