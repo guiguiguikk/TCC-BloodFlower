@@ -10,6 +10,8 @@ include("conexao.php");
 $id_usuario = $_SESSION["id"];
 $id_produto = $_POST["produto_id"] ?? null;
 $vem_de = $_POST["vem_de"] ?? null;
+$tamanho = $_POST["tamanho"] ?? null;
+
 
 if (!$id_produto) {
     header("Location: index.php");
@@ -31,12 +33,12 @@ if (mysqli_num_rows($result) == 0) {
 }
 
 // Verifica se o produto já está no carrinho
-$sql_check = "SELECT * FROM itens_carrinho WHERE carrinho_id = $id_carrinho AND produto_id = $id_produto";
+$sql_check = "SELECT * FROM itens_carrinho WHERE carrinho_id = $id_carrinho AND produto_id = $id_produto and tamanho_id = $tamanho";
 $result_check = mysqli_query($conn, $sql_check);
 
 if (mysqli_num_rows($result_check) == 0) {
     // Adiciona produto
-    $sql_adicionaProduto = "INSERT INTO itens_carrinho (carrinho_id, produto_id) VALUES ($id_carrinho, $id_produto)";
+    $sql_adicionaProduto = "INSERT INTO itens_carrinho (carrinho_id, produto_id, tamanho) VALUES ($id_carrinho, $id_produto, $tamanho)";
     $result_adicionaProduto = mysqli_query($conn, $sql_adicionaProduto);
 
     if ($result_adicionaProduto && $vem_de == "detalhes") {

@@ -5,12 +5,12 @@ if(!isset($_SESSION['id']) && $_SESSION['tipo'] != "admin"){
     exit;
 }
 include("../conexao.php");
-$id = $_GET['id_produto'];
-$sql = "DELETE FROM produtos WHERE id_produto = $id";
+$id = $_GET['id'];
+$sql = "DELETE FROM produtos WHERE id = $id";
 $result = mysqli_query($conn, $sql);
 
 if ($result) {
-    header("Location: inicioADM.php?secao=produtos");
+    header("Location: inicioADM.php?secao=produto");
     exit;
 }else{
     die(mysqli_error($conn));

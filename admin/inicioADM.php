@@ -199,7 +199,7 @@ $secao = $_GET['secao'] ?? 'produto';
                     <th>Valor Total</th>
                     <th>Status</th>
                     <th>Data / Hora</th>
-                    <th class='text-center' colspan='2'>Ações</th>
+                    <th class='text-center' colspan='3'>Ações</th>
                 </tr></thead><tbody>";
 
                     while ($row = mysqli_fetch_assoc($result)) {
@@ -220,6 +220,12 @@ $secao = $_GET['secao'] ?? 'produto';
                         echo "<td class='text-center'>
                         <a href='detalhesPedido.php?id_pedido={$row['id']}' class='text-primary'>
                             <i class='bi bi-file-earmark-text-fill'></i>
+                        </a>
+                      </td>";
+
+                      echo "<td class='text-center'>
+                        <a href='formEditPedido.php?id_pedido={$row['id']}' class='text-primary'>
+                            <i class='bi bi-pencil-square'></i>
                         </a>
                       </td>";
 

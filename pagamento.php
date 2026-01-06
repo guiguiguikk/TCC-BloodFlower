@@ -24,9 +24,10 @@ $carrinho = mysqli_fetch_assoc($carrinho_res);
 // Verifica se existe carrinho
 if ($carrinho) {
     $id_carrinho = $carrinho['id_carrinho'];
-    $sql_itens = "SELECT ic.*, p.nome, p.preco, p.imagem 
+    $sql_itens = "SELECT ic.*, p.nome, p.preco,p.preco_desconto, p.imagem, t.nome as tamanho_nome
                   FROM itens_carrinho ic
                   JOIN produtos p ON ic.produto_id = p.id
+                    JOIN tamanhos t ON ic.tamanho = t.id
                   WHERE carrinho_id = $id_carrinho";
     $res_itens = mysqli_query($conn, $sql_itens);
 } else {
@@ -37,7 +38,11 @@ $total = 0;
 $produtos = [];
 if ($res_itens) {
     while ($item = mysqli_fetch_assoc($res_itens)) {
-        $subtotal = $item['preco'] * $item['quantidade'];
+        if( $item['preco_desconto'] < $item['preco'] && $item['preco_desconto'] > 0) {
+            $subtotal = $item['preco_desconto'] * $item['quantidade'];
+        } else {
+            $subtotal = $item['preco'] * $item['quantidade'];
+        }
         $total += $subtotal;
         $produtos[] = $item;
     }
@@ -251,7 +256,8 @@ if ($res_itens) {
                                 <img src="imagens/<?= $item['imagem'] ?>" alt="<?= $item['nome'] ?>" width="60" class="me-3 rounded">
                                 <div>
                                     <strong><?= $item['nome'] ?></strong><br>
-                                    <small><?= $item['quantidade'] ?>x R$ <?= number_format($item['preco'], 2, ',', '.') ?></small>
+                                    <small><?= $item['quantidade'] ?>x R$ <?= number_format($item['preco_desconto'] > 0 && $item['preco_desconto'] < $item['preco'] ? $item['preco_desconto'] : $item['preco'], 2, ',', '.') ?></small><br>
+                                    <small>Tamanho: <?= $item['tamanho_nome'] ?></small>
                                 </div>
                             </div>
                         <?php endforeach; ?>

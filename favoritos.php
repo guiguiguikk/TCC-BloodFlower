@@ -190,7 +190,7 @@ if (!$itens) {
                             <img src="imagens/<?= $produto['imagem']; ?>" alt="<?= $produto['nome']; ?>">
                             <div class="flex-grow-1">
                                 <h5 class="mb-1"><?= $produto['nome']; ?></h5>
-                                <p class="mb-2 text-muted">R$ <?= number_format($produto['preco'], 2, ',', '.'); ?></p>
+                                <p class="mb-2 text-muted">R$ <?= number_format($produto['preco_desconto'] < $produto['preco'] && $produto['preco_desconto'] > 0 ? $produto['preco_desconto'] : $produto['preco'], 2, ',', '.'); ?></p>
                                 <div class="d-flex flex-wrap gap-2">
                                     <a href="detalhes.php?id=<?= $produto_id; ?>" class="btn btn-outline-secondary btn-sm">Ver Produto</a>
 

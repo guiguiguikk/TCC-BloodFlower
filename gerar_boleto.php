@@ -7,13 +7,16 @@ require_once 'dompdf/dompdf/autoload.inc.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-// Segurança básica
-if (!isset($_SESSION['id'])) { die("Acesso negado"); }
+
+if (!isset($_SESSION['id'])) {
+    header("Location: entrar.php");
+    exit;
+}
 
 $pedido_id = isset($_GET['pedido']) ? intval($_GET['pedido']) : 0;
 $id_usuario = $_SESSION['id'];
 
-// 1. REFAZER A CONSULTA (Pois é um novo arquivo/requisição)
+
 $sql_user_info = "SELECT u.nome, u.cpf, e.rua, e.cidade, e.estado, p.total 
                   FROM pedidos p 
                   JOIN usuarios u ON p.id_usuario = u.id_usuario 
@@ -34,13 +37,31 @@ $cpf_cliente  = $dados['cpf'];
 $end_cliente  = $dados['rua'] . " - " . $dados['cidade'] . "/" . $dados['estado'];
 $total        = $dados['total'];
 
-// Dados do Boleto
+// dados do boleto
 $data_vencimento = date('d/m/Y', strtotime('+3 days'));
 $data_documento  = date('d/m/Y');
 $valor_boleto    = number_format($total, 2, ',', '.');
 $nosso_numero    = str_pad($pedido_id, 10, "0", STR_PAD_LEFT);
 
-// HTML (O mesmo que você já fez)
+
+$sql_itens_pedido = "SELECT ip.*, p.nome, t.nome as tamanho_nome
+                     FROM itens_pedido ip 
+                     JOIN produtos p ON ip.id_produto = p.id 
+                     JOIN tamanhos t ON ip.tamanho = t.id
+                     WHERE ip.id_pedido = $pedido_id";
+
+$res_itens = mysqli_query($conn, $sql_itens_pedido);
+
+
+$lista_produtos_html = "";
+
+
+while ($item = mysqli_fetch_assoc($res_itens)) {
+    
+    $lista_produtos_html .= "- " . $item['quantidade'] . "x " . $item['nome'] . " (Tam: " . $item['tamanho_nome'] . ")<br>";
+}
+
+
 $html = "
 <html>
 <head>
@@ -71,7 +92,7 @@ $html = "
         </table>
         <table>
             <tr>
-                <td><span class='label'>Beneficiário</span><span class='dado'>Minha Loja Online LTDA</span></td>
+                <td><span class='label'>Beneficiário</span><span class='dado'>BloodFlower</span></td>
                 <td width='150'><span class='label'>Agência/Código</span><span class='dado'>1234 / 56789-0</span></td>
             </tr>
             <tr>
@@ -79,7 +100,13 @@ $html = "
                 <td><span class='label'>Nosso Número</span><span class='dado'>$nosso_numero</span></td>
             </tr>
             <tr>
-                <td><span class='label'>Demonstrativo</span><br>Pedido #$pedido_id</td>
+                <td>
+                    <span class='label'>Demonstrativo</span><br>
+                    Pedido #$pedido_id<br>
+                    <div style='margin-top: 5px;'>
+                        $lista_produtos_html
+                    </div>
+                </td>
                 <td><span class='label'>Valor Documento</span><span class='dado direita'>R$ $valor_boleto</span></td>
             </tr>
         </table>

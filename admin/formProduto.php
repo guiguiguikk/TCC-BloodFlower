@@ -9,6 +9,21 @@ include("../conexao.php");
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+<script>
+    function toggleQuantidade(tamanho) {
+        const checkbox = document.getElementById('tamanho' + tamanho);
+        const input = document.getElementById('qtd' + tamanho);
+
+        if (checkbox.checked) {
+            input.classList.remove('d-none');
+            input.required = true;
+        } else {
+            input.classList.add('d-none');
+            input.value = '';
+            input.required = false;
+        }
+    }
+</script>
 
 <head>
     <meta charset="UTF-8">
@@ -122,14 +137,22 @@ include("../conexao.php");
                 <input type="text" class="form-control" id="preco_desconto" name="preco_desconto" placeholder="R$ 0,00">
             </div>
 
-            <div class="mb-3">
-                <label for="estoque" class="form-label">Estoque</label>
-                <input type="number" class="form-control" id="estoque" name="estoque" placeholder="Quantidade em estoque" required>
-            </div>
 
             <div class="mb-3">
                 <label for="imagem" class="form-label">Imagem do Produto</label>
-                <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*" required>
+                <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*">
+            </div>
+
+            <div class="mb-3">
+                <label for="tamanho" class="form-label">Tamanho</label><br>
+                <input type="checkbox" class="form-check-input" id="tamanhoP" name="tamanho[]" value="P" onclick="toggleQuantidade('P')"> P
+                <input type="number" class="form-control w-25 d-none" id="qtdP" name="quantP" placeholder="Qtd" min="0">
+                <input type="checkbox" class="form-check-input" id="tamanhoM" name="tamanho[]" value="M" onclick="toggleQuantidade('M')"> M
+                <input type="number" class="form-control w-25 d-none" id="qtdM" name="quantM" placeholder="Qtd" min="0">
+                <input type="checkbox" class="form-check-input" id="tamanhoG" name="tamanho[]" value="G" onclick="toggleQuantidade('G')"> G
+                <input type="number" class="form-control w-25 d-none" id="qtdG" name="quantG" placeholder="Qtd" min="0">
+                <input type="checkbox" class="form-check-input" id="tamanhoGG" name="tamanho[]" value="GG" onclick="toggleQuantidade('GG')"> GG
+                <input type="number" class="form-control w-25 d-none" id="qtdGG" name="quantGG" placeholder="Qtd" min="0">
             </div>
 
             <?php

@@ -23,9 +23,10 @@ $pedido = mysqli_fetch_assoc($result_pedido);
 
 // Pega os itens do pedido
 $sql_itens = "
-    SELECT ip.*, p.nome, p.imagem 
+    SELECT ip.*, p.nome, p.imagem, t.nome as tamanho_nome
     FROM itens_pedido ip 
     JOIN produtos p ON ip.id_produto = p.id 
+    JOIN tamanhos t ON ip.tamanho = t.id
     WHERE ip.id_pedido = $id_pedido
 ";
 $result_itens = mysqli_query($conn, $sql_itens);
@@ -155,6 +156,7 @@ $result_itens = mysqli_query($conn, $sql_itens);
             <div class="flex-grow-1">
                 <h6 class="mb-1"><?= $item['nome'] ?></h6>
                 <p class="mb-0 text-muted">Quantidade: <?= $item['quantidade'] ?> | Preço: R$ <?= number_format($item['preco'], 2, ',', '.') ?></p>
+                <p class="mb-0 text-muted">Tamanho: <?= $item['tamanho_nome'] ?></p>
             </div>
             <div class="text-end">
                 <p class="mb-0 fw-bold">Subtotal: R$ <?= number_format($item['subtotal'], 2, ',', '.') ?></p>
@@ -176,5 +178,4 @@ $result_itens = mysqli_query($conn, $sql_itens);
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-<?php
-var_dump($pedido);
+

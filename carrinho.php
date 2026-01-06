@@ -19,7 +19,7 @@ if (mysqli_num_rows($result) == 0) {
     $id_carrinho = $carrinho['id_carrinho'];
 }
 
-$sql_itens = "SELECT * FROM itens_carrinho WHERE carrinho_id = $id_carrinho";
+$sql_itens = "SELECT ic.*, t.nome as tamanho_nome FROM itens_carrinho ic JOIN tamanhos t ON ic.tamanho = t.id WHERE carrinho_id = $id_carrinho";
 $itens = mysqli_query($conn, $sql_itens);
 ?>
 
@@ -174,14 +174,19 @@ $itens = mysqli_query($conn, $sql_itens);
                         $prod_result = mysqli_query($conn, "SELECT * FROM produtos WHERE id = $produto_id");
                         $produto = mysqli_fetch_assoc($prod_result);
 
-                        $subtotal = $produto['preco'] * $qtd;
+                        if ($produto['preco_desconto'] < $produto['preco'] && $produto['preco_desconto'] > 0) {
+                            $subtotal = $produto['preco_desconto'] * $qtd;
+                        }else {
+                            $subtotal = $produto['preco'] * $qtd;
+                        }
                         $total += $subtotal;
                 ?>
                         <div class="produto-card">
                             <img src="imagens/<?= $produto['imagem'] ?>" alt="<?= $produto['nome'] ?>">
                             <div class="flex-grow-1">
                                 <h5><?= $produto['nome'] ?></h5>
-                                <p class="mb-1 text-muted">Preço: R$ <?= number_format($produto['preco'], 2, ',', '.') ?></p>
+                                <p class="mb-1 text-muted">Preço: R$ <?= number_format($produto['preco_desconto'] > 0 && $produto['preco_desconto'] < $produto['preco'] ? $produto['preco_desconto'] : $produto['preco'], 2, ',', '.') ?></p>
+                                <p class="mb-1 text-muted">Tamanho: <?= htmlspecialchars($item['tamanho_nome']) ?></p>
                                 <form method="POST" action="atualizarQtd.php" class="d-flex align-items-center mt-2">
                                     <input type="hidden" name="carrinho_id" value="<?= $id_carrinho ?>">
                                     <input type="hidden" name="produto_id" value="<?= $produto_id ?>">

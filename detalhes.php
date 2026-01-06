@@ -98,7 +98,8 @@ $result_tamanhos = mysqli_query($conn, $sql_tamanhos);
             background-color: #f9f9f9;
             font-family: 'Rubik', sans-serif;
         }
-                /* NAVBAR ... (sem alterações) */
+
+        /* NAVBAR ... (sem alterações) */
         .navbar {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(8px);
@@ -282,7 +283,7 @@ $result_tamanhos = mysqli_query($conn, $sql_tamanhos);
             </button>
             <div class="collapse navbar-collapse" id="navbarNavCliente">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                
+
                 </ul>
                 <div class="d-flex gap-3 align-items-center">
                     <?php if (!isset($_SESSION['email'])) { ?>
@@ -310,7 +311,16 @@ $result_tamanhos = mysqli_query($conn, $sql_tamanhos);
             </div>
             <div class="col-lg-6 info-produto">
                 <h1><?= htmlspecialchars($produto['nome']) ?></h1>
-                <div class="preco-produto mb-3">R$ <?= number_format($produto['preco'], 2, ',', '.') ?></div>
+
+                <?php
+                if ($produto['preco_desconto'] < $produto['preco'] && $produto['preco_desconto'] > 0) {
+                    echo "<div class='mb-2'>";
+                    echo "<span class='text-muted text-decoration-line-through me-3'>R$ " . number_format($produto['preco'], 2, ',', '.') . "</span>";
+                    echo "</div>";
+                }
+                ?>
+
+                <div class="preco-produto mb-3">R$ <?= number_format($produto['preco_desconto'] < $produto['preco'] && $produto['preco_desconto'] > 0 ? $produto['preco_desconto'] : $produto['preco'], 2, ',', '.') ?></div>
                 <div class="extra-info">
                     <p><i class="bi bi-truck"></i> Entrega rápida disponível</p>
                     <p><i class="bi bi-box-seam"></i> Estoque limitado</p>
@@ -334,6 +344,26 @@ $result_tamanhos = mysqli_query($conn, $sql_tamanhos);
                         </form>
                     <?php else: ?>
                         <form method="POST" action="adicionar_carrinho.php">
+                            <?php
+                            if (mysqli_num_rows($result_tamanhos) > 0) {
+                            ?>
+
+                                <div class="mt-3">
+                                    <label for="tamanho" class="form-label fw-semibold">Escolha o Tamanho:</label>
+                                    <?php
+                                    while ($tamanho = mysqli_fetch_assoc($result_tamanhos)) { ?>
+                                        <input type="radio" class="btn-check" name="tamanho" value="<?= $tamanho['id'] ?>" id="tamanho<?= $tamanho['id'] ?>" autocomplete="off" required>
+                                        <label class="btn btn-outline-secondary me-2" for="tamanho<?= $tamanho['id'] ?>"><?= htmlspecialchars($tamanho['nome']) ?></label>
+                                    <?php
+
+                                    }
+                                    ?>
+
+                                </div>
+                                <div class="mb-3 mt-2">
+                                </div>
+                            <?php
+                            }  ?>
                             <input type="hidden" name="produto_id" value="<?= $produto['id'] ?>">
                             <input type="hidden" name="vem_de" value="detalhes">
                             <button type="submit" class="btn btn-danger w-100"><i class="bi bi-cart-plus me-2"></i> Adicionar ao Carrinho</button>
@@ -354,24 +384,7 @@ $result_tamanhos = mysqli_query($conn, $sql_tamanhos);
                         </form>
                     <?php endif; ?>
 
-                    <?php 
-                    if (mysqli_num_rows($result_tamanhos) > 0){
-                        ?>
-                        <div class="mt-3">
-                            <label for="tamanho" class="form-label fw-semibold">Escolha o Tamanho:</label>
-                                <?php
-                                while ($tamanho = mysqli_fetch_assoc($result_tamanhos)) {?>
-                                <input type="radio" class="btn-check" name="tamanho" id="tamanho<?= $tamanho['id'] ?>" autocomplete="off">
-                                <label class="btn btn-outline-secondary me-2" for="tamanho<?= $tamanho['id'] ?>"><?= htmlspecialchars($tamanho['nome']) ?></label>
-                                <?php
-                                   
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                        <?php
-                    }  ?>
+
                 </div>
             </div>
         </div>
@@ -417,7 +430,7 @@ $result_tamanhos = mysqli_query($conn, $sql_tamanhos);
                                     <img src="https://i.pravatar.cc/50?u=<?= $av['usuario_id'] ?>" class="rounded-circle me-2" width="45" height="45" alt="avatar">
                                     <div>
                                         <h6 class="mb-0 fw-semibold"><?= htmlspecialchars($av['usuario_nome']) ?></h6>
-                                        <small class="text-muted"><?= date("d/m/Y", strtotime($av['data_hora'])) ?></small>
+                                        <small class="text-muted"><?= htmlspecialchars($av['data_hora']) ?></small>
                                     </div>
                                 </div>
                                 <div class="mb-2">
@@ -425,10 +438,10 @@ $result_tamanhos = mysqli_query($conn, $sql_tamanhos);
                                         <i class="bi <?= $i <= $av['nota'] ? 'bi-star-fill text-warning' : 'bi-star text-warning' ?>"></i>
                                     <?php endfor; ?>
                                 </div>
-                                <p class="text-muted flex-grow-1 comentario mb-2"><?= nl2br(htmlspecialchars($av['comentario'])) ?></p>
-                                <?php if (strlen($av['comentario']) > 120): ?>
-                                    <span class="text-danger small fw-semibold ver-mais" role="button">Ver mais</span>
-                                <?php endif; ?>
+
+                                <p class="text-muted flex-grow-1 comentario mb-2">
+                                    <?= nl2br(htmlspecialchars($av['comentario'])) ?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -437,6 +450,7 @@ $result_tamanhos = mysqli_query($conn, $sql_tamanhos);
                 <p class="text-muted">Nenhuma avaliação ainda.</p>
             <?php endif; ?>
         </div>
+
     </div>
 
     <!-- Recomendações -->

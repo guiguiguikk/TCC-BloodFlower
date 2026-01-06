@@ -45,12 +45,13 @@ $itens = [];
 while ($item = mysqli_fetch_assoc($result_itens)) {
     $produto_id = $item['produto_id'];
     $quantidade = $item['quantidade'];
+    $tamanho = $item['tamanho'];
 
-    $sql_prod = "SELECT nome, preco FROM produtos WHERE id = $produto_id"; // Peguei o NOME também
+    $sql_prod = "SELECT nome, preco, preco_desconto FROM produtos WHERE id = $produto_id"; // Peguei o NOME também
     $res_prod = mysqli_query($conn, $sql_prod);
     $produto = mysqli_fetch_assoc($res_prod);
 
-    $preco = $produto['preco'];
+    $preco = ($produto['preco_desconto'] < $produto['preco'] && $produto['preco_desconto'] > 0) ? $produto['preco_desconto'] : $produto['preco'];
     $subtotal = $preco * $quantidade;
     $total += $subtotal;
 
@@ -59,7 +60,8 @@ while ($item = mysqli_fetch_assoc($result_itens)) {
         'produto_id' => $produto_id,
         'quantidade' => $quantidade,
         'preco' => $preco,
-        'subtotal' => $subtotal
+        'subtotal' => $subtotal,
+        'tamanho' => $tamanho
     ];
 }
 
@@ -76,8 +78,9 @@ foreach ($itens as $item) {
     $qtd = $item['quantidade'];
     $preco = $item['preco'];
     $subtotal = $item['subtotal'];
-    $sql_item = "INSERT INTO itens_pedido (id_pedido, id_produto, quantidade, preco, subtotal) 
-                 VALUES ($id_pedido, $pid, $qtd, $preco, $subtotal)";
+    $tamanho = $item['tamanho'];
+    $sql_item = "INSERT INTO itens_pedido (id_pedido, id_produto, quantidade, preco, subtotal, tamanho) 
+                 VALUES ($id_pedido, $pid, $qtd, $preco, $subtotal, $tamanho)";
     mysqli_query($conn, $sql_item);
 }
 

@@ -4,20 +4,16 @@ session_start();
 
 
 $categoriaAtual = isset($_GET['categoria']) ? (int) $_GET['categoria'] : 0;
-$marcaAtual = isset($_GET['marca']) ? (int) $_GET['marca'] : 0;
 $busca = isset($_GET['busca']) ? trim($_GET['busca']) : '';
-$ordenacao = isset($_GET['ordem']) ? $_GET['ordem'] : 'recente';
 
 
-// Base SQL
-$sql = "SELECT * FROM produtos WHERE 1=1";
+
+
+$sql = "SELECT * FROM produtos WHERE estoque > 0";
 
 
 if ($categoriaAtual > 0) {
     $sql .= " AND categoria_id = $categoriaAtual";
-}
-if ($marcaAtual > 0) {
-    $sql .= " AND marca_id = $marcaAtual";
 }
 if (!empty($busca)) {
     $buscaEscapada = mysqli_real_escape_string($conn, $busca);
@@ -25,20 +21,6 @@ if (!empty($busca)) {
 }
 
 
-// Ordenação
-switch ($ordenacao) {
-    case 'preco_menor':
-        $sql .= " ORDER BY COALESCE(preco_desconto, preco) ASC";
-        break;
-    case 'preco_maior':
-        $sql .= " ORDER BY COALESCE(preco_desconto, preco) DESC";
-        break;
-    case 'desconto':
-        $sql .= " ORDER BY (CASE WHEN preco_desconto IS NOT NULL AND preco_desconto > 0 AND preco_desconto < preco THEN (preco - preco_desconto) ELSE 0 END) DESC";
-        break;
-    default:
-        $sql .= " ORDER BY id DESC";
-}
 
 
 // Paginação
@@ -56,12 +38,8 @@ $sql .= " LIMIT $porPagina OFFSET $offset";
 $result = mysqli_query($conn, $sql);
 
 
-// Produtos em destaque (com desconto válido)
-$destaque_sql = "SELECT * FROM produtos WHERE preco_desconto IS NOT NULL AND preco_desconto > 0 AND preco_desconto < preco ORDER BY (preco - preco_desconto) DESC LIMIT 8";
-$destaque_result = mysqli_query($conn, $destaque_sql);
 
 
-// Função para calcular desconto válido
 function calcularDesconto($preco, $preco_desconto)
 {
     if (!$preco_desconto || $preco_desconto <= 0 || $preco_desconto >= $preco) {
@@ -71,7 +49,6 @@ function calcularDesconto($preco, $preco_desconto)
 }
 
 
-// Função para obter preço exibido
 function getPrecoExibido($preco, $preco_desconto)
 {
     if (!$preco_desconto || $preco_desconto <= 0 || $preco_desconto >= $preco) {
